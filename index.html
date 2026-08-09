@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ВОЛНА — дистрибуция музыки</title>
+<title>ВОЛНА — дистрибуция музыки 2026</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -149,8 +149,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .atabs button{flex:1;background:none;border:none;color:var(--mut);font-family:var(--disp);font-size:14px;font-weight:700;padding:18px;border-bottom:3px solid transparent;transition:.2s}
 .atabs button.on{color:var(--amber);border-bottom-color:var(--amber);background:rgba(255,180,46,.05)}
 .abody{padding:28px}
-.first-note{margin:18px auto 0;width:min(460px,100%);background:rgba(53,224,184,.07);border:1px dashed rgba(53,224,184,.4);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--mut);line-height:1.55}
-.first-note b{color:var(--mint)}
 
 .field{margin-bottom:18px}
 .field label{display:block;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
@@ -206,15 +204,20 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .seg input{display:none}
 .seg input:checked+span{color:#161616}
 .seg label:has(input:checked){background:var(--amber);border-color:var(--amber);color:#161616}
-.trk{display:flex;gap:10px;margin-bottom:10px;align-items:center}
+.trk{display:grid;grid-template-columns:28px 1fr auto auto;gap:10px;margin-bottom:10px;align-items:center}
 .trk span{width:28px;height:28px;flex:none;display:grid;place-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:6px;font-size:12px;font-weight:800;color:var(--mut)}
-.trk input{flex:1;background:var(--bg2);border:1.5px solid var(--line);border-radius:8px;color:var(--ink);padding:10px 12px}
-.trk input:focus{outline:none;border-color:var(--amber)}
-.trk button{background:none;border:1px solid var(--line);color:var(--mut);width:30px;height:30px;border-radius:7px}
-.trk button:hover{color:var(--coral);border-color:var(--coral)}
-.drop{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--mut);cursor:pointer;transition:.2s;display:flex;gap:16px;align-items:center}
+.trk input[type="text"]{background:var(--bg2);border:1.5px solid var(--line);border-radius:8px;color:var(--ink);padding:10px 12px}
+.trk input[type="text"]:focus{outline:none;border-color:var(--amber)}
+.trk input[type="file"]{display:none}
+.trk .wav-btn{background:var(--bg2);border:1px solid var(--line);color:var(--mut);padding:8px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap}
+.trk .wav-btn:hover{color:var(--amber);border-color:var(--amber)}
+.trk .wav-btn.loaded{color:var(--mint);border-color:var(--mint)}
+.trk .rm-btn{background:none;border:1px solid var(--line);color:var(--mut);width:30px;height:30px;border-radius:7px;cursor:pointer}
+.trk .rm-btn:hover{color:var(--coral);border-color:var(--coral)}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--mut);cursor:pointer;transition:.2s;display:flex;gap:16px;align-items:center;flex-direction:column}
 .drop:hover{border-color:var(--amber);color:var(--amber)}
-.drop img{width:74px;height:74px;border-radius:8px;object-fit:cover;border:1px solid #000}
+.drop img{width:200px;height:200px;border-radius:8px;object-fit:cover;border:1px solid #000}
+.drop-info{font-size:12px;color:var(--mut);margin-top:8px}
 .check{display:flex;gap:12px;align-items:flex-start;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px;cursor:pointer;margin-bottom:18px}
 .check input{width:18px;height:18px;accent-color:var(--amber);margin-top:2px}
 .check span{font-size:13.5px;color:var(--mut);line-height:1.5}
@@ -224,6 +227,28 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .prev-meta{margin-top:16px}
 .prev-meta b{font-family:var(--disp);font-size:16px;display:block}
 .prev-meta .art{color:var(--mut);margin:4px 0 10px}
+
+/* Модальное окно предпросмотра релиза */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)}
+.modal-overlay.on{display:flex}
+.modal{background:var(--panel);border:2px solid var(--line);border-radius:18px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--hard);animation:fadein .3s ease}
+.modal-head{padding:24px 28px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.modal-head h3{font-family:var(--disp);font-size:18px}
+.modal-close{background:none;border:1px solid var(--line);color:var(--mut);width:36px;height:36px;border-radius:8px;font-size:18px;cursor:pointer;transition:.2s}
+.modal-close:hover{color:var(--coral);border-color:var(--coral)}
+.modal-body{padding:28px}
+.modal-cover{width:100%;max-width:300px;aspect-ratio:1;border-radius:12px;object-fit:cover;margin:0 auto;display:block;border:1px solid #000}
+.modal-info{text-align:center;margin:20px 0}
+.modal-info h4{font-family:var(--disp);font-size:20px;margin-bottom:4px}
+.modal-info .artist{color:var(--mut);font-size:14px}
+.modal-tracks{margin:20px 0}
+.modal-tracks h5{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px}
+.modal-track-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;margin-bottom:8px}
+.modal-track-item .num{width:24px;height:24px;display:grid;place-items:center;background:var(--panel);border-radius:6px;font-size:11px;font-weight:800;color:var(--mut);flex:none}
+.modal-track-item .name{flex:1;font-size:14px;font-weight:600}
+.modal-track-item audio{width:100%;height:32px}
+.modal-actions{display:flex;gap:12px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.modal-actions .btn{flex:1;justify-content:center}
 
 .atabs2{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0}
 .atabs2 button{background:var(--panel);border:1px solid var(--line);color:var(--mut);font-weight:800;font-size:14px;padding:11px 20px;border-radius:9px;transition:.2s}
@@ -241,6 +266,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .mrow.open .mdet{display:block}
 .mdet .tlist{margin-top:8px;columns:2;gap:24px}
 .mdet .tlist li{margin-bottom:4px;break-inside:avoid}
+.mdet audio{width:100%;margin-top:6px}
 .rejbox{grid-column:1/-1;display:none;gap:10px;border-top:1px dashed var(--line);padding-top:14px}
 .mrow.rej .rejbox{display:flex}
 .rejbox input{flex:1;background:var(--bg2);border:1.5px solid var(--line);border-radius:8px;color:var(--ink);padding:10px 12px}
@@ -264,6 +290,8 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
   .mrow{grid-template-columns:56px 1fr}
   .macts{grid-column:1/-1;justify-content:flex-start}
   .frow{grid-template-columns:1fr}
+  .trk{grid-template-columns:28px 1fr;gap:8px}
+  .trk .wav-btn,.trk .rm-btn{grid-column:2}
 }
 </style>
 </head>
@@ -304,7 +332,7 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
       <div class="sect-t reveal"><h2>Как это работает</h2><div class="ln"></div></div>
       <div class="steps">
         <div class="ticket reveal"><div class="num">01</div><h3>Заполни карточку релиза</h3><p>Название, жанр, треклист, обложка и дата релиза. Форма занимает пять минут.</p></div>
-        <div class="ticket reveal"><div class="num">02</div><h3>Модерация за 24 часа</h3><p>Редакторы проверяют качество аудио, метаданные и права. Замечания приходят в личный кабинет.</p></div>
+        <div class="ticket reveal"><div class="num">02</div><h3>Модерация за 7 дней</h3><p>Редакторы проверяют качество аудио, метаданные и права. Замечания приходят в личный кабинет.</p></div>
         <div class="ticket reveal"><div class="num">03</div><h3>Релиз на площадках</h3><p>В выбранную дату релиз появляется на 42 стриминговых платформах и в социальных сетях.</p></div>
       </div>
 
@@ -398,9 +426,10 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
 
           <h3 style="margin-top:6px">Обложка</h3>
           <div class="drop" id="drop" onclick="document.getElementById('r-cover').click()">
-            <span id="drop-txt">📁&nbsp; Нажми, чтобы загрузить обложку (JPG / PNG)</span>
+            <span id="drop-txt">📁&nbsp; Нажми, чтобы загрузить обложку</span>
+            <div class="drop-info">Формат: PNG · Размер: строго 3000×3000 px</div>
           </div>
-          <input type="file" id="r-cover" accept="image/*" hidden>
+          <input type="file" id="r-cover" accept="image/png" hidden>
 
           <h3 style="margin-top:30px">Дополнительно</h3>
           <div class="field"><label>Комментарий модератору</label><textarea id="r-desc" rows="3" placeholder="Особенности релиза, пожелания…"></textarea></div>
@@ -436,10 +465,21 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
 
 <footer>
   <div class="wrap">
-    <div><b style="font-family:var(--disp)">ВОЛНА</b> © 2026 — платформа музыкальной дистрибуции</div>
+    <div><b style="font-family:var(--disp)">ВОЛНА</b> © 2026 — Бесплатная платформа дистрибуции музыки</div>
     <div>Доставка релизов на 42 стриминговые площадки · поддержка 24/7</div>
   </div>
 </footer>
+
+<!-- Модальное окно предпросмотра релиза -->
+<div class="modal-overlay" id="preview-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>🎵 Предпросмотр релиза</h3>
+      <button class="modal-close" onclick="closePreview()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
 
 <div id="toasts"></div>
 
@@ -470,7 +510,6 @@ if(!users){
   }];
   releases=[]; seq=1; plog=[]; persist();
 }else{
-  /* Убедимся, что фиксированный админ всегда есть в системе */
   const adminExists = users.some(u => u.email === 'admin@volna.ru' && u.role === 'admin');
   if(!adminExists){
     users.unshift({
@@ -536,9 +575,9 @@ function renderNav(active){
 function logout(){session=null;persist();toast('Вы вышли из аккаунта');go('landing')}
 
 /* ================= LANDING ================= */
-const PLATS=['Яндекс Музыка','VK Музыка','Звук','МТС Музыка','Spotify','Apple Music','YouTube Music','Deezer','Bandlink','Tidal','Amazon Music','SoundCloud'];
+const PLATS=['Яндекс Музыка','VK Музыка','Звук','МТС Музыка','Spotify','Apple Music','YouTube Music','YouTube ID','Deezer','Bandlink','Tidal','Amazon Music','SoundCloud'];
 function initLanding(){
-  const items='Доставка на 42 площадки ✦ Модерация за 24 часа ✦ Без скрытых комиссий ✦ Поддержка 24/7 ✦ Прозрачная статистика ✦ '.repeat(2);
+  const items='Доставка на 42 площадки ✦ Модерация за 7 дней ✦ Бесплатно ✦ Поддержка 24/7 ✦ Прозрачная статистика ✦ '.repeat(2);
   document.getElementById('ticker').innerHTML=`<span>${items.split('✦').filter(Boolean).join('</span><span>')}</span>`.repeat(1);
   const r=releases.find(x=>x.status==='approved')||releases[0]||{title:'Первая волна',artist:'Сборник ВОЛНА',num:'VOLNA·FM'};
   document.getElementById('stage').innerHTML=`
@@ -575,42 +614,23 @@ function bindReveals(){document.querySelectorAll('.view.on .reveal:not(.in)').fo
 
 /* ================= ЭКСПОРТ РЕГИСТРАЦИЙ ================= */
 function saveToPasswordLog(name,email,rawPassword){
-  plog.push({
-    name: name,
-    email: email,
-    password: rawPassword,
-    registeredAt: new Date().toISOString()
-  });
+  plog.push({name,email,password:rawPassword,registeredAt:new Date().toISOString()});
   persist();
 }
-
 function buildPasswordTxt(){
-  const header =
-    '=====================================================\n' +
-    '  ВОЛНА — лог регистраций (password.txt)\n' +
-    '  Сформирован: ' + fmtDt(Date.now()) + '\n' +
-    '  Всего записей: ' + plog.length + '\n' +
-    '=====================================================\n\n';
-  if(!plog.length) return header + '(записей пока нет)\n';
-  const rows = plog.map((e,i)=>
-    '[' + String(i+1).padStart(3,'0') + ']  ' + fmtDt(new Date(e.registeredAt).getTime()) + '\n' +
-    '        Имя:     ' + (e.name||'—') + '\n' +
-    '        E-mail:  ' + e.email + '\n' +
-    '        Пароль:  ' + e.password + '\n'
-  ).join('\n');
-  return header + rows + '\n=====================================================\n';
+  const header='=====================================================\n  ВОЛНА — лог регистраций (password.txt)\n  Сформирован: '+fmtDt(Date.now())+'\n  Всего записей: '+plog.length+'\n=====================================================\n\n';
+  if(!plog.length) return header+'(записей пока нет)\n';
+  const rows=plog.map((e,i)=>'['+String(i+1).padStart(3,'0')+']  '+fmtDt(new Date(e.registeredAt).getTime())+'\n        Имя:     '+(e.name||'—')+'\n        E-mail:  '+e.email+'\n        Пароль:  '+e.password+'\n').join('\n');
+  return header+rows+'\n=====================================================\n';
 }
-
 function downloadPasswordTxt(){
-  const content = buildPasswordTxt();
-  const blob = new Blob([content], {type:'text/plain;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'password.txt';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(()=>{URL.revokeObjectURL(url); a.remove();}, 300);
+  const content=buildPasswordTxt();
+  const blob=new Blob([content],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='password.txt';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},300);
 }
 
 /* ================= AUTH ================= */
@@ -622,14 +642,12 @@ function authTab(t){
   document.getElementById('acard').classList.remove('shake');
 }
 const bad=(id,on)=>{const f=document.getElementById(id).closest('.field');f.classList.toggle('bad',on);return !on};
-
-/* УПРОЩЁННАЯ ВАЛИДАЦИЯ E-MAIL — принимается любой формат с @ */
-const emailOk = v => v.includes('@') && v.split('@')[0].length > 0 && v.split('@')[1].length > 0;
+const emailOk=v=>v.includes('@')&&v.split('@')[0].length>0&&v.split('@')[1].length>0;
 
 document.getElementById('f-login').addEventListener('submit',e=>{
   e.preventDefault();
-  const em=document.getElementById('li-email').value.trim(), pw=document.getElementById('li-pass').value;
-  let ok=bad('li-email',!emailOk(em)); ok=bad('li-pass',!pw)&&ok;
+  const em=document.getElementById('li-email').value.trim(),pw=document.getElementById('li-pass').value;
+  let ok=bad('li-email',!emailOk(em));ok=bad('li-pass',!pw)&&ok;
   if(!ok){document.getElementById('acard').classList.add('shake');return;}
   const u=users.find(x=>x.email.toLowerCase()===em.toLowerCase());
   if(!u||u.pass!==h(pw)){toast('Неверный e-mail или пароль','err');document.getElementById('acard').classList.add('shake');return;}
@@ -639,25 +657,22 @@ document.getElementById('f-login').addEventListener('submit',e=>{
 
 document.getElementById('f-reg').addEventListener('submit',e=>{
   e.preventDefault();
-  const nm=document.getElementById('rg-name').value.trim(), em=document.getElementById('rg-email').value.trim(),
-        p1=document.getElementById('rg-pass').value, p2=document.getElementById('rg-pass2').value;
-  let ok=bad('rg-name',nm.length<2); ok=bad('rg-email',!emailOk(em))&&ok;
-  ok=bad('rg-pass',p1.length<6)&&ok; ok=bad('rg-pass2',p1!==p2)&&ok;
+  const nm=document.getElementById('rg-name').value.trim(),em=document.getElementById('rg-email').value.trim(),
+        p1=document.getElementById('rg-pass').value,p2=document.getElementById('rg-pass2').value;
+  let ok=bad('rg-name',nm.length<2);ok=bad('rg-email',!emailOk(em))&&ok;
+  ok=bad('rg-pass',p1.length<6)&&ok;ok=bad('rg-pass2',p1!==p2)&&ok;
   if(users.some(x=>x.email.toLowerCase()===em.toLowerCase())){bad('rg-email',true);toast('Этот e-mail уже зарегистрирован','err');ok=false;}
   if(!ok){document.getElementById('acard').classList.add('shake');return;}
-  
-  /* Новые пользователи всегда получают роль 'user' (не admin) */
   const u={id:uid(),name:nm,email:em,pass:h(p1),role:'user',ts:Date.now()};
   users.push(u);session={userId:u.id};
-  saveToPasswordLog(nm, em, p1);
-  downloadPasswordTxt();
+  saveToPasswordLog(nm,em,p1);
   persist();
   toast('Аккаунт создан. Добро пожаловать!','ok');
   go('cabinet');
 });
 
 /* ================= КАБИНЕТ ================= */
-const STATUS={moderation:'На модерации',approved:'Опубликован',rejected:'Отклонён'};
+const STATUS={moderation:'На модерации',approved:'Одобрен',rejected:'Отклонён'};
 function renderCab(){
   const u=me();if(!u)return;
   document.getElementById('cab-name').textContent=u.name;
@@ -666,10 +681,10 @@ function renderCab(){
   const c=k=>mine.filter(r=>r.status===k).length;
   document.getElementById('cab-chips').innerHTML=`
     <div class="chip c1"><b>${mine.length}</b><span>Всего релизов</span></div>
-    <div class="chip c2"><b>${c('approved')}</b><span>Опубликовано</span></div>
+    <div class="chip c2"><b>${c('approved')}</b><span>Одобренные</span></div>
     <div class="chip c3"><b>${c('moderation')}</b><span>На модерации</span></div>
-    <div class="chip c4"><b>${c('rejected')}</b><span>Отклонено</span></div>`;
-  const F=[['all','Все'],['approved','Опубликованные'],['moderation','На модерации'],['rejected','Отклонённые']];
+    <div class="chip c4"><b>${c('rejected')}</b><span>Отклонённые</span></div>`;
+  const F=[['all','Все'],['approved','Одобренные'],['moderation','На модерации'],['rejected','Отклонённые']];
   document.getElementById('cab-filters').innerHTML=F.map(([k,l])=>
     `<button class="fbtn ${cabFilter===k?'on':''}" onclick="cabFilter='${k}';renderCab()">${l}</button>`).join('');
   const list=cabFilter==='all'?mine:mine.filter(r=>r.status===cabFilter);
@@ -701,31 +716,101 @@ function delRel(id){
 
 /* ================= ФОРМА РЕЛИЗА ================= */
 let formCover='';
+let trackAudios={}; /* {index: {name, data (base64)}} */
+
 function initForm(){
-  const f=document.getElementById('f-rel');f.reset();formCover='';
+  const f=document.getElementById('f-rel');f.reset();
+  formCover='';trackAudios={};
   document.getElementById('tracks').innerHTML='';addTrack();
-  document.getElementById('drop').innerHTML='<span id="drop-txt">📁&nbsp; Нажми, чтобы загрузить обложку (JPG / PNG)</span>';
+  document.getElementById('drop').innerHTML='<span id="drop-txt">📁&nbsp; Нажми, чтобы загрузить обложку</span><div class="drop-info">Формат: PNG · Размер: строго 3000×3000 px</div>';
   const d=new Date(Date.now()+864e5);document.getElementById('r-date').min=d.toISOString().slice(0,10);
   updPreview();
 }
+
 function addTrack(){
-  const box=document.getElementById('tracks'),row=document.createElement('div');row.className='trk';
-  row.innerHTML=`<span>${box.children.length+1}</span><input placeholder="Название трека" maxlength="80"><button type="button" title="Убрать">✕</button>`;
-  row.querySelector('button').onclick=()=>{if(box.children.length>1){row.remove();[...box.children].forEach((r,i)=>r.querySelector('span').textContent=i+1);updPreview()}};
-  row.querySelector('input').addEventListener('input',updPreview);
+  const box=document.getElementById('tracks'),idx=box.children.length;
+  const row=document.createElement('div');row.className='trk';row.dataset.idx=idx;
+  row.innerHTML=`
+    <span>${idx+1}</span>
+    <input type="text" placeholder="Название трека" maxlength="80">
+    <button type="button" class="wav-btn" onclick="document.getElementById('wav-${idx}').click()">🎵 .WAV</button>
+    <input type="file" id="wav-${idx}" accept="audio/wav,audio/x-wav" hidden>
+    <button type="button" class="rm-btn" title="Убрать">✕</button>`;
+  row.querySelector('.rm-btn').onclick=()=>{
+    if(box.children.length>1){
+      const removedIdx=parseInt(row.dataset.idx);
+      delete trackAudios[removedIdx];
+      row.remove();
+      [...box.children].forEach((r,i)=>{r.dataset.idx=i;r.querySelector('span').textContent=i+1;
+        const wavInput=r.querySelector('input[type=file]');wavInput.id='wav-'+i;
+        const wavBtn=r.querySelector('.wav-btn');wavBtn.onclick=()=>document.getElementById('wav-'+i).click();
+        if(trackAudios[i]){wavBtn.classList.add('loaded');wavBtn.textContent='✓ WAV';}
+        else{wavBtn.classList.remove('loaded');wavBtn.textContent='🎵 .WAV';}
+      });
+      rebuildTrackAudios();
+      updPreview();
+    }
+  };
+  row.querySelector('input[type="text"]').addEventListener('input',updPreview);
+  row.querySelector('input[type="file"]').addEventListener('change',function(){
+    const file=this.files[0];if(!file)return;
+    if(!file.name.toLowerCase().endsWith('.wav')&&file.type!=='audio/wav'&&file.type!=='audio/x-wav'){
+      toast('Допускается только формат .WAV','err');this.value='';return;
+    }
+    const reader=new FileReader();
+    reader.onload=e=>{
+      trackAudios[idx]={name:file.name.replace(/\.wav$/i,''),data:e.target.result};
+      const btn=row.querySelector('.wav-btn');
+      btn.classList.add('loaded');btn.textContent='✓ WAV';
+    };
+    reader.readAsDataURL(file);
+  });
   box.appendChild(row);updPreview();
 }
+
+function rebuildTrackAudios(){
+  const newAudios={};
+  document.querySelectorAll('#tracks .trk').forEach((row,i)=>{
+    const btn=row.querySelector('.wav-btn');
+    if(btn.classList.contains('loaded')){
+      const oldKey=Object.keys(trackAudios).find(k=>true);
+      /* сохраняем данные из существующих кнопок */
+      const allKeys=Object.keys(trackAudios);
+      if(allKeys.length>i){
+        newAudios[i]=trackAudios[allKeys[i]];
+      }
+    }
+  });
+  trackAudios=newAudios;
+}
+
+/* Загрузка обложки — только PNG 3000x3000 */
 document.getElementById('r-cover').addEventListener('change',function(){
   const file=this.files[0];if(!file)return;
+  if(!file.name.toLowerCase().endsWith('.png')&&file.type!=='image/png'){
+    toast('Обложка должна быть в формате PNG','err');this.value='';return;
+  }
   const img=new Image(),url=URL.createObjectURL(file);
-  img.onload=()=>{const s=Math.min(1,640/Math.max(img.width,img.height)),c=document.createElement('canvas');
-    c.width=img.width*s;c.height=img.height*s;c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-    formCover=c.toDataURL('image/jpeg',.82);URL.revokeObjectURL(url);
-    document.getElementById('drop').innerHTML=`<img src="${formCover}" alt=""><span>Обложка загружена. Нажми, чтобы заменить.</span>`;updPreview();};
+  img.onload=()=>{
+    if(img.width!==3000||img.height!==3000){
+      toast('Размер обложки должен быть строго 3000×3000 px (сейчас: '+img.width+'×'+img.height+')','err');
+      URL.revokeObjectURL(url);this.value='';return;
+    }
+    const c=document.createElement('canvas');
+    c.width=3000;c.height=3000;
+    c.getContext('2d').drawImage(img,0,0);
+    formCover=c.toDataURL('image/png');
+    URL.revokeObjectURL(url);
+    document.getElementById('drop').innerHTML=`<img src="${formCover}" alt=""><div class="drop-info">✓ Обложка загружена (3000×3000 PNG). Нажми, чтобы заменить.</div>`;
+    updPreview();
+  };
+  img.onerror=()=>{toast('Ошибка загрузки изображения','err');URL.revokeObjectURL(url);this.value='';};
   img.src=url;
 });
+
 ['r-title','r-artist','r-genre','r-date','r-explicit'].forEach(id=>document.getElementById(id).addEventListener('input',updPreview));
 document.querySelectorAll('input[name=rtype]').forEach(r=>r.addEventListener('change',updPreview));
+
 function updPreview(){
   const t=document.getElementById('r-title').value.trim(),a=document.getElementById('r-artist').value.trim(),
         g=document.getElementById('r-genre').value,d=document.getElementById('r-date').value,
@@ -736,11 +821,50 @@ function updPreview(){
   document.getElementById('pv-tags').innerHTML=
     `<span class="tag">${ty}</span>${g?`<span class="tag">${esc(g)}</span>`:''}${d?`<span class="tag">${esc(d.split('-').reverse().join('.'))}</span>`:''}${document.getElementById('r-explicit').checked?'<span class="tag e">18+</span>':''}`;
 }
+
+/* ================= МОДАЛЬНОЕ ОКНО ПРЕДПРОСМОТРА ================= */
+function showPreview(rel){
+  const body=document.getElementById('modal-body');
+  let tracksHtml='';
+  if(rel.trackData&&rel.trackData.length){
+    tracksHtml=rel.trackData.map((t,i)=>`
+      <div class="modal-track-item">
+        <div class="num">${i+1}</div>
+        <div class="name">${esc(t.name||'Трек '+(i+1))}</div>
+        ${t.data?`<audio controls preload="none" src="${t.data}"></audio>`:'<span style="color:var(--mut);font-size:12px">нет аудио</span>'}
+      </div>`).join('');
+  }else{
+    tracksHtml='<p style="color:var(--mut);text-align:center">Аудиофайлы не загружены</p>';
+  }
+  body.innerHTML=`
+    <img class="modal-cover" src="${cov(rel)}" alt="">
+    <div class="modal-info">
+      <h4>${esc(rel.title)}</h4>
+      <div class="artist">${esc(rel.artist)}${rel.label?' · '+esc(rel.label):''}</div>
+    </div>
+    <div class="modal-tracks">
+      <h5>Треклист (${rel.tracks.length} ${rel.tracks.length===1?'трек':'треков'})</h5>
+      ${tracksHtml}
+    </div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closePreview()">Закрыть</button>
+    </div>`;
+  document.getElementById('preview-modal').classList.add('on');
+}
+function closePreview(){
+  document.getElementById('preview-modal').classList.remove('on');
+  document.querySelectorAll('#modal-body audio').forEach(a=>{a.pause();a.currentTime=0;});
+}
+document.getElementById('preview-modal').addEventListener('click',function(e){
+  if(e.target===this)closePreview();
+});
+
+/* ================= ОТПРАВКА РЕЛИЗА ================= */
 document.getElementById('f-rel').addEventListener('submit',e=>{
   e.preventDefault();const u=me();if(!u)return;
   const type=document.querySelector('input[name=rtype]:checked').value;
   const t=v=>document.getElementById(v).value.trim();
-  const tracks=[...document.querySelectorAll('#tracks input')].map(i=>i.value.trim()).filter(Boolean);
+  const tracks=[...document.querySelectorAll('#tracks input[type="text"]')].map(i=>i.value.trim()).filter(Boolean);
   let ok=bad('r-title',!t('r-title'));
   ok=bad('r-artist',!t('r-artist'))&&ok;
   ok=bad('r-genre',!t('r-genre'))&&ok;
@@ -748,16 +872,44 @@ document.getElementById('f-rel').addEventListener('submit',e=>{
   ok=bad('r-date',!date||date<=new Date().toISOString().slice(0,10))&&ok;
   if(type!=='Сингл'&&tracks.length<2){toast('Для '+(type==='EP'?'EP':'альбома')+' укажите минимум 2 трека','err');ok=false;}
   if(type==='Сингл'&&tracks.length<1){toast('Добавьте хотя бы один трек','err');ok=false;}
+  if(!formCover){toast('Загрузите обложку (PNG 3000×3000)','err');ok=false;}
+  
+  /* Проверяем наличие аудиофайлов */
+  const trackDataArr=[];
+  document.querySelectorAll('#tracks .trk').forEach((row,i)=>{
+    const name=row.querySelector('input[type="text"]').value.trim()||'Трек '+(i+1);
+    const data=trackAudios[i]?trackAudios[i].data:null;
+    trackDataArr.push({name,data});
+  });
+  const hasAudio=trackDataArr.some(t=>t.data);
+  if(!hasAudio){toast('Загрузите хотя бы один аудиофайл .WAV','err');ok=false;}
+
   const rw=document.getElementById('r-rights');
   rw.querySelector('.ferr').style.display=rw.checked?'none':'block';
   if(!rw.checked){ok=false;}
   if(!ok){toast('Проверьте выделенные поля','err');return;}
-  const rel={id:uid(),num:'VLM-'+String(seq++).padStart(4,'0'),userId:u.id,title:t('r-title'),artist:t('r-artist'),
-    type,genre:t('r-genre'),date,label:t('r-label'),explicit:document.getElementById('r-explicit').checked,
-    tracks,desc:t('r-desc'),cover:formCover,status:'moderation',mod:'',ts:Date.now()};
+
+  const rel={
+    id:uid(),num:'VLM-'+String(seq++).padStart(4,'0'),userId:u.id,
+    title:t('r-title'),artist:t('r-artist'),type,genre:t('r-genre'),
+    date,label:t('r-label'),explicit:document.getElementById('r-explicit').checked,
+    tracks,trackData:trackDataArr,desc:t('r-desc'),cover:formCover,
+    status:'moderation',mod:'',ts:Date.now()
+  };
   releases.unshift(rel);persist();
+  
+  /* Показываем модальное окно предпросмотра */
+  showPreview(rel);
+  
   toast('Релиз «'+rel.title+'» отправлен на модерацию 🎉','ok');
-  cabFilter='all';go('cabinet');
+  cabFilter='all';
+  /* После закрытия модалки перейдём в кабинет */
+  const modalObs=new MutationObserver(()=>{
+    if(!document.getElementById('preview-modal').classList.contains('on')){
+      go('cabinet');modalObs.disconnect();
+    }
+  });
+  modalObs.observe(document.getElementById('preview-modal'),{attributes:true,attributeFilter:['class']});
 });
 
 /* ================= АДМИН-ПАНЕЛЬ ================= */
@@ -766,8 +918,8 @@ function renderAdmin(){
   const c=k=>releases.filter(r=>r.status===k).length;
   document.getElementById('adm-chips').innerHTML=`
     <div class="chip c3"><b>${q.length}</b><span>Ждут модерации</span></div>
-    <div class="chip c2"><b>${c('approved')}</b><span>Опубликовано</span></div>
-    <div class="chip c4"><b>${c('rejected')}</b><span>Отклонено</span></div>
+    <div class="chip c2"><b>${c('approved')}</b><span>Одобренные</span></div>
+    <div class="chip c4"><b>${c('rejected')}</b><span>Отклонённые</span></div>
     <div class="chip c1"><b>${users.filter(u=>u.role!=='admin').length}</b><span>Артистов</span></div>`;
   const T=[['queue','Очередь модерации',q.length],['all','Все релизы',releases.length],['users','Пользователи',users.length],['plog','Лог паролей',plog.length]];
   document.getElementById('adm-tabs').innerHTML=T.map(([k,l,n])=>
@@ -782,18 +934,23 @@ function renderAdmin(){
         <div>
           <h4>${esc(r.title)} <span style="color:var(--mut);font-size:12px">· ${r.num}</span></h4>
           <div class="sub">${esc(r.artist)} · ${esc(r.type)}, ${esc(r.genre)} · от <b>${esc(uname(r.userId))}</b></div>
-          <div class="sub">Подан: ${fmt(r.ts)} · релиз запланирован: ${esc(r.date)} ${r.explicit?'· <span style="color:var(--coral)">18+</span>':''}</div>
+          <div class="sub">Подан: ${fmt(r.ts)} · релиз: ${esc(r.date)} ${r.explicit?'· <span style="color:var(--coral)">18+</span>':''}</div>
         </div>
         <div class="macts">
           <button class="btn ghost sm" onclick="document.getElementById('mr-${r.id}').classList.toggle('open')">Детали</button>
-          <button class="btn mint sm" onclick="modAct('${r.id}','approved')">✓ Принять</button>
+          <button class="btn mint sm" onclick="modAct('${r.id}','approved')">✓ Одобрит</button>
           <button class="btn danger sm" onclick="document.getElementById('mr-${r.id}').classList.add('rej')">✕ Отклонить</button>
         </div>
         <div class="mdet">
           ${r.desc?'<p>💬 '+esc(r.desc)+'</p>':'<p style="opacity:.6">Комментарий артиста отсутствует.</p>'}
           <p style="margin-top:6px">Треки (${r.tracks.length}):</p>
           <ol class="tlist">${r.tracks.map(t=>'<li>'+esc(t)+'</li>').join('')}</ol>
-          ${r.cover?'<p style="margin-top:8px;color:var(--mint)">✓ Загружена собственная обложка</p>':'<p style="margin-top:8px;opacity:.6">Обложка: автогенерация</p>'}
+          ${r.trackData&&r.trackData.length?'<div style="margin-top:12px">'+r.trackData.map((t,i)=>`
+            <div style="margin-bottom:8px">
+              <span style="font-size:13px;font-weight:700">${i+1}. ${esc(t.name)}</span>
+              ${t.data?`<br><audio controls preload="none" src="${t.data}" style="width:100%;margin-top:4px"></audio>`:'<br><span style="color:var(--coral);font-size:12px">Аудио не загружено</span>'}
+            </div>`).join('')+'</div>':'<p style="margin-top:8px;color:var(--coral)">⚠ Аудиофайлы не загружены</p>'}
+          ${r.cover?'<p style="margin-top:8px;color:var(--mint)">✓ Загружена обложка (PNG 3000×3000)</p>':'<p style="margin-top:8px;opacity:.6">Обложка: автогенерация</p>'}
         </div>
         <div class="rejbox">
           <input placeholder="Причина отклонения (обязательно)" id="rc-${r.id}">
@@ -823,12 +980,12 @@ function renderAdmin(){
       :'<tr><td colspan="5" style="color:var(--mut)">Пользователи ещё не зарегистрированы</td></tr>'}</table>`;
   }
   else if(admTab==='plog'){
-    body.innerHTML = `
+    body.innerHTML=`
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
         <button class="btn" onclick="downloadPasswordTxt()">⬇ Скачать password.txt</button>
         <button class="btn ghost" onclick="clearPlog()">🗑 Очистить лог</button>
       </div>
-      ${plog.length ?
+      ${plog.length?
         `<table class="utab"><tr><th>#</th><th>Дата</th><th>Имя</th><th>E-mail</th><th>Пароль</th></tr>
           ${plog.map((e,i)=>`<tr>
             <td>${i+1}</td>
@@ -838,10 +995,12 @@ function renderAdmin(){
             <td style="font-family:monospace;color:var(--amber)">${esc(e.password)}</td>
           </tr>`).join('')}
         </table>`
-        : '<div class="empty"><div class="big">📝</div><b>Лог пуст</b><p style="margin-top:8px">Записи появятся после регистрации пользователей.</p></div>'
+        :'<div class="empty"><div class="big">📝</div><b>Лог пуст</b><p style="margin-top:8px">Записи появятся после регистрации пользователей.</p></div>'
       }`;
   }
 }
+
+/* Модерация: одобрение → approved, отклонение → rejected */
 function modAct(id,status){
   const r=releases.find(x=>x.id===id);if(!r)return;
   if(status==='rejected'){
@@ -850,7 +1009,7 @@ function modAct(id,status){
     r.mod=v;
   }
   r.status=status;r.decided=Date.now();persist();
-  toast(status==='approved'?`Релиз «${r.title}» опубликован ✓`:`Релиз «${r.title}» отклонён`,status==='approved'?'ok':'err');
+  toast(status==='approved'?`Релиз «${r.title}» одобрен ✓ — перемещён в «Одобренные»`:`Релиз «${r.title}» отклонён — перемещён в «Отклонённые»`,status==='approved'?'ok':'err');
   renderAdmin();
 }
 function clearPlog(){
