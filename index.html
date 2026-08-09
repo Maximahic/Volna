@@ -15,6 +15,9 @@
   --amber:#ffb42e; --coral:#ff5c49; --mint:#35e0b8; --sky:#6db1ff; --pink:#ff8fb2;
   --disp:'Unbounded',sans-serif; --body:'Manrope',sans-serif;
   --hard:6px 6px 0 rgba(0,0,0,.45);
+  /* Telegram-style цвета для чата */
+  --tg-bg:#17212b; --tg-panel:#242f3d; --tg-bubble-self:#2b5278;
+  --tg-bubble-other:#182533; --tg-accent:#64b5f6; --tg-input:#242f3d;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -169,6 +172,14 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .chip b{display:block;font-family:var(--disp);font-size:24px}
 .chip span{font-size:12px;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
 .chip.c1 b{color:var(--ink)}.chip.c2 b{color:var(--mint)}.chip.c3 b{color:var(--amber)}.chip.c4 b{color:var(--coral)}
+
+/* Вкладки в кабинете */
+.cab-tabs{display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:6px;margin:24px 0 20px;width:fit-content}
+.cab-tabs button{background:none;border:none;color:var(--mut);font-weight:700;font-size:14px;padding:10px 20px;border-radius:8px;transition:.2s;display:flex;align-items:center;gap:8px}
+.cab-tabs button:hover{color:var(--ink)}
+.cab-tabs button.on{background:var(--amber);color:#161616}
+.cab-tabs .cnt{background:var(--coral);color:#fff;border-radius:5px;padding:1px 7px;font-size:11px;margin-left:4px}
+
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 26px}
 .fbtn{background:none;border:1px solid var(--line);color:var(--mut);padding:8px 16px;border-radius:99px;font-weight:700;font-size:13px;transition:.2s}
 .fbtn:hover{color:var(--ink)}
@@ -194,6 +205,175 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .empty{grid-column:1/-1;text-align:center;padding:70px 20px;border:2px dashed var(--line);border-radius:16px;color:var(--mut)}
 .empty .big{font-size:44px;margin-bottom:12px}
 
+/* ============ ЧАТ В СТИЛЕ TELEGRAM ============ */
+.chat-wrap{
+  background:var(--tg-bg);
+  border:1px solid var(--line);
+  border-radius:18px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  height:650px;
+  margin-bottom:80px;
+  box-shadow:0 10px 40px rgba(0,0,0,.3);
+}
+.chat-header{
+  background:var(--tg-panel);
+  padding:16px 20px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.chat-icon{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,var(--amber),var(--coral));
+  display:grid;place-items:center;
+  font-size:20px;
+  box-shadow:0 4px 12px rgba(255,92,73,.3);
+}
+.chat-hinfo h3{font-size:15px;font-family:var(--disp);font-weight:700}
+.chat-hinfo .online{font-size:12px;color:var(--mint);margin-top:2px;display:flex;align-items:center;gap:6px}
+.chat-hinfo .online::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 8px var(--mint)}
+.chat-messages{
+  flex:1;
+  overflow-y:auto;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,180,46,.04), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(53,224,184,.04), transparent 40%),
+    var(--tg-bg);
+  scroll-behavior:smooth;
+}
+.chat-messages::-webkit-scrollbar{width:6px}
+.chat-messages::-webkit-scrollbar-track{background:transparent}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.chat-messages::-webkit-scrollbar-thumb:hover{background:var(--mut)}
+.chat-date-sep{
+  text-align:center;
+  margin:14px 0 10px;
+}
+.chat-date-sep span{
+  background:rgba(0,0,0,.35);
+  color:var(--mut);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:5px 12px;
+  border-radius:99px;
+  backdrop-filter:blur(8px);
+}
+.msg-row{display:flex;gap:10px;max-width:75%;animation:msg-in .25s ease}
+@keyframes msg-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.msg-row.self{margin-left:auto;flex-direction:row-reverse}
+.msg-ava{
+  width:34px;height:34px;border-radius:50%;flex:none;
+  display:grid;place-items:center;
+  font-size:13px;font-weight:800;color:#fff;
+  text-transform:uppercase;
+  margin-top:auto;
+}
+.msg-body{display:flex;flex-direction:column;gap:2px;min-width:0}
+.msg-name{font-size:12px;font-weight:700;color:var(--tg-accent);padding:0 4px}
+.msg-row.self .msg-name{text-align:right;color:var(--amber)}
+.msg-bubble{
+  background:var(--tg-bubble-other);
+  padding:9px 14px 8px;
+  border-radius:4px 14px 14px 14px;
+  font-size:14px;line-height:1.45;
+  word-wrap:break-word;
+  position:relative;
+  box-shadow:0 1px 2px rgba(0,0,0,.2);
+  max-width:100%;
+}
+.msg-row.self .msg-bubble{
+  background:var(--tg-bubble-self);
+  border-radius:14px 4px 14px 14px;
+  color:#f5f9ff;
+}
+.msg-time{
+  font-size:10.5px;
+  color:rgba(255,255,255,.5);
+  margin-top:3px;
+  padding:0 4px;
+}
+.msg-row.self .msg-time{text-align:right}
+.msg-admin-tag{
+  display:inline-block;
+  background:var(--coral);
+  color:#fff;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:1px 6px;
+  border-radius:3px;
+  margin-left:6px;
+  vertical-align:middle;
+}
+.chat-empty{
+  flex:1;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  color:var(--mut);
+  padding:40px 20px;
+}
+.chat-empty .ico{font-size:52px;margin-bottom:12px;opacity:.4}
+.chat-empty b{color:var(--ink);font-size:15px;display:block;margin-bottom:4px}
+.chat-input-wrap{
+  background:var(--tg-panel);
+  border-top:1px solid var(--line);
+  padding:14px 16px;
+  display:flex;
+  gap:10px;
+  align-items:flex-end;
+}
+.chat-input{
+  flex:1;
+  background:var(--tg-input);
+  border:1px solid var(--line);
+  border-radius:18px;
+  color:var(--ink);
+  padding:11px 16px;
+  font-size:14px;
+  resize:none;
+  max-height:120px;
+  min-height:42px;
+  line-height:1.4;
+  outline:none;
+  transition:border-color .2s;
+  font-family:var(--body);
+}
+.chat-input:focus{border-color:var(--tg-accent)}
+.chat-input::placeholder{color:var(--mut)}
+.chat-send{
+  width:42px;height:42px;
+  border-radius:50%;
+  background:var(--amber);
+  color:#161616;
+  border:none;
+  font-size:18px;
+  flex:none;
+  display:grid;place-items:center;
+  cursor:pointer;
+  transition:.2s;
+  box-shadow:0 4px 12px rgba(255,180,46,.35);
+}
+.chat-send:hover{background:var(--coral);transform:scale(1.06)}
+.chat-send:disabled{opacity:.4;pointer-events:none}
+.typing{
+  padding:0 20px 6px;
+  font-size:12px;
+  color:var(--mut);
+  font-style:italic;
+  min-height:18px;
+}
+
 .form-grid{display:grid;grid-template-columns:1.25fr .85fr;gap:34px;padding:34px 0 90px;align-items:start}
 .fpanel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:28px}
 .fpanel h3{font-size:17px;margin-bottom:22px;display:flex;align-items:center;gap:10px}
@@ -206,7 +386,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .seg label:has(input:checked){background:var(--amber);border-color:var(--amber);color:#161616}
 .trk{display:grid;grid-template-columns:28px 1fr auto auto;gap:10px;margin-bottom:10px;align-items:center}
 .trk span{width:28px;height:28px;flex:none;display:grid;place-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:6px;font-size:12px;font-weight:800;color:var(--mut)}
-.trk input[type="text"]{background:var(--bg2);border:1.5px solid var(--line);border-radius:8px;color:var(--ink);padding:10px 12px}
+.trk input[type="text"]{background:var(--bg2);border:1.5px solid var(--line);border-radius:8px;color:var(--ink);padding:10px 12px;min-width:0}
 .trk input[type="text"]:focus{outline:none;border-color:var(--amber)}
 .trk input[type="file"]{display:none}
 .trk .wav-btn{background:var(--bg2);border:1px solid var(--line);color:var(--mut);padding:8px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap}
@@ -228,7 +408,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .prev-meta b{font-family:var(--disp);font-size:16px;display:block}
 .prev-meta .art{color:var(--mut);margin:4px 0 10px}
 
-/* Модальное окно предпросмотра релиза */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)}
 .modal-overlay.on{display:flex}
 .modal{background:var(--panel);border:2px solid var(--line);border-radius:18px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--hard);animation:fadein .3s ease}
@@ -243,17 +422,17 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .modal-info .artist{color:var(--mut);font-size:14px}
 .modal-tracks{margin:20px 0}
 .modal-tracks h5{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:12px}
-.modal-track-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;margin-bottom:8px}
+.modal-track-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;margin-bottom:8px;flex-wrap:wrap}
 .modal-track-item .num{width:24px;height:24px;display:grid;place-items:center;background:var(--panel);border-radius:6px;font-size:11px;font-weight:800;color:var(--mut);flex:none}
-.modal-track-item .name{flex:1;font-size:14px;font-weight:600}
-.modal-track-item audio{width:100%;height:32px}
+.modal-track-item .name{flex:1;font-size:14px;font-weight:600;min-width:120px}
+.modal-track-item audio{width:100%;min-width:180px;height:32px;margin-top:6px}
 .modal-actions{display:flex;gap:12px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
 .modal-actions .btn{flex:1;justify-content:center}
 
 .atabs2{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0}
-.atabs2 button{background:var(--panel);border:1px solid var(--line);color:var(--mut);font-weight:800;font-size:14px;padding:11px 20px;border-radius:9px;transition:.2s}
+.atabs2 button{background:var(--panel);border:1px solid var(--line);color:var(--mut);font-weight:800;font-size:14px;padding:11px 20px;border-radius:9px;transition:.2s;display:inline-flex;align-items:center;gap:6px}
 .atabs2 button.on{background:var(--ink);color:#161616;border-color:var(--ink)}
-.atabs2 .cnt{background:var(--coral);color:#fff;border-radius:5px;padding:1px 7px;font-size:12px;margin-left:6px}
+.atabs2 .cnt{background:var(--coral);color:#fff;border-radius:5px;padding:1px 7px;font-size:12px}
 .mlist{display:flex;flex-direction:column;gap:14px;padding-bottom:90px}
 .mrow{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:16px;display:grid;grid-template-columns:70px 1fr auto;gap:18px;align-items:center;transition:.2s;animation:fadein .35s ease}
 .mrow:hover{border-color:#4a4a5e}
@@ -292,6 +471,10 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
   .frow{grid-template-columns:1fr}
   .trk{grid-template-columns:28px 1fr;gap:8px}
   .trk .wav-btn,.trk .rm-btn{grid-column:2}
+  .chat-wrap{height:550px}
+  .msg-row{max-width:88%}
+  .cab-tabs{width:100%}
+  .cab-tabs button{flex:1;justify-content:center;padding:10px 12px;font-size:13px}
 }
 </style>
 </head>
@@ -356,13 +539,11 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
             <button id="tab-log" onclick="authTab('log')">Вход</button>
             <button id="tab-reg" onclick="authTab('reg')">Регистрация</button>
           </div>
-
           <form class="abody" id="f-login" novalidate>
             <div class="field"><label>E-mail</label><input type="text" id="li-email" placeholder="любой e-mail"><div class="ferr">Введите e-mail</div></div>
             <div class="field"><label>Пароль</label><input type="password" id="li-pass" placeholder="••••••••"><div class="ferr">Введите пароль</div></div>
             <button class="btn" style="width:100%;justify-content:center" type="submit">Войти в кабинет</button>
           </form>
-
           <form class="abody" id="f-reg" novalidate style="display:none">
             <div class="field"><label>Имя артиста / лейбла</label><input id="rg-name" placeholder="Северный Звук"><div class="ferr">Минимум 2 символа</div></div>
             <div class="field"><label>E-mail</label><input type="text" id="rg-email" placeholder="любой e-mail"><div class="ferr">Введите e-mail</div></div>
@@ -385,9 +566,35 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
         </div>
         <button class="btn" onclick="go('newrel')">+ Новый релиз</button>
       </div>
-      <div class="chips" id="cab-chips"></div>
-      <div class="filters" id="cab-filters"></div>
-      <div class="grid" id="cab-grid"></div>
+
+      <div class="cab-tabs">
+        <button id="cabtab-rel" class="on" onclick="cabTab('rel')">💿 Мои релизы</button>
+        <button id="cabtab-chat" onclick="cabTab('chat')">💬 Общий чат <span class="cnt" id="chat-cnt">0</span></button>
+      </div>
+
+      <div id="cab-rel-section">
+        <div class="chips" id="cab-chips"></div>
+        <div class="filters" id="cab-filters"></div>
+        <div class="grid" id="cab-grid"></div>
+      </div>
+
+      <div id="cab-chat-section" style="display:none">
+        <div class="chat-wrap">
+          <div class="chat-header">
+            <div class="chat-icon">🎧</div>
+            <div class="chat-hinfo">
+              <h3>Общий чат ВОЛНА</h3>
+              <div class="online"><span id="chat-online-count">0</span> артистов онлайн</div>
+            </div>
+          </div>
+          <div class="chat-messages" id="chat-messages"></div>
+          <div class="typing" id="chat-typing"></div>
+          <div class="chat-input-wrap">
+            <textarea class="chat-input" id="chat-input" placeholder="Напишите сообщение..." rows="1" maxlength="1000"></textarea>
+            <button class="chat-send" id="chat-send" title="Отправить (Enter)">➤</button>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -470,7 +677,6 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
   </div>
 </footer>
 
-<!-- Модальное окно предпросмотра релиза -->
 <div class="modal-overlay" id="preview-modal">
   <div class="modal">
     <div class="modal-head">
@@ -485,8 +691,10 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
 
 <script>
 /* ================= ХРАНИЛИЩЕ ================= */
-const LS={get:(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k));return v===null?f:v}catch(e){return f}},
-          set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
+const LS={
+  get:(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k));return v===null?f:v}catch(e){return f}},
+  set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){console.warn('Storage full:',k);toast('Хранилище переполнено','err')}}
+};
 const h=s=>{let x=5381;for(let i=0;i<String(s).length;i++)x=((x<<5)+x+String(s).charCodeAt(i))>>>0;return 'x'+x.toString(36)};
 const uid=()=>'id-'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -495,8 +703,15 @@ const fmtDt=t=>new Date(t).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit'
 
 let users=LS.get('vln_users',null), releases=LS.get('vln_rel',null),
     seq=LS.get('vln_seq',null), session=LS.get('vln_sess',null),
-    plog=LS.get('vln_plog',null);
-const persist=()=>{LS.set('vln_users',users);LS.set('vln_rel',releases);LS.set('vln_seq',seq);LS.set('vln_sess',session);LS.set('vln_plog',plog)};
+    plog=LS.get('vln_plog',null), chat=LS.get('vln_chat',null);
+const persist=()=>{
+  LS.set('vln_users',users);
+  LS.set('vln_rel',releases);
+  LS.set('vln_seq',seq);
+  LS.set('vln_sess',session);
+  LS.set('vln_plog',plog);
+  LS.set('vln_chat',chat);
+};
 
 /* ================= ИНИЦИАЛИЗАЦИЯ С ФИКСИРОВАННЫМ АДМИНОМ ================= */
 if(!users){
@@ -508,7 +723,7 @@ if(!users){
     role:'admin',
     ts: Date.now()
   }];
-  releases=[]; seq=1; plog=[]; persist();
+  releases=[]; seq=1; plog=[]; chat=[]; persist();
 }else{
   const adminExists = users.some(u => u.email === 'admin@volna.ru' && u.role === 'admin');
   if(!adminExists){
@@ -524,6 +739,7 @@ if(!users){
   releases=Array.isArray(releases)?releases:[];
   if(typeof seq!=='number')seq=releases.length+1;
   if(!Array.isArray(plog))plog=[];
+  if(!Array.isArray(chat))chat=[];
   persist();
 }
 
@@ -536,7 +752,7 @@ function makeCover(title,seed){
 }
 const cov=r=>r.cover||makeCover(r.title,r.num||r.id||'volna');
 
-/* ================= СИСТЕМА ================= */
+/* ================= УТИЛИТЫ ================= */
 function toast(msg,type=''){
   const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;
   document.getElementById('toasts').appendChild(t);
@@ -544,8 +760,18 @@ function toast(msg,type=''){
 }
 const me=()=>session?users.find(u=>u.id===session.userId):null;
 
+/* Цвет аватара по хешу */
+const AVA_COLS=['#ff5c49','#ffb42e','#35e0b8','#6db1ff','#ff8fb2','#ffd166','#b983ff','#7dd3fc','#fb7185','#34d399'];
+function avaColor(seed){
+  let x=5381;for(let i=0;i<String(seed).length;i++)x=((x<<5)+x+String(seed).charCodeAt(i))>>>0;
+  return AVA_COLS[x%AVA_COLS.length];
+}
+function avaLetter(name){
+  return (name||'?').trim().charAt(0).toUpperCase()||'?';
+}
+
 /* ================= РОУТЕР ================= */
-let cabFilter='all', admTab='queue';
+let cabFilter='all', admTab='queue', cabCurrentTab='rel';
 function go(view,arg){
   if(view==='cabinet'&&!me())view='auth';
   if(view==='newrel'&&!me())view='auth';
@@ -567,12 +793,15 @@ function renderNav(active){
     <button class="btn sm" onclick="go('auth','reg')">Начать</button>`;return;}
   n.innerHTML=`
     ${u.role==='admin'?`<span class="role-chip">модератор</span>`:''}
-    <button class="nlink ${active==='cabinet'?'active':''}" onclick="go('cabinet')">Мои релизы</button>
+    <button class="nlink ${active==='cabinet'?'active':''}" onclick="go('cabinet')">Кабинет</button>
     <button class="nlink ${active==='newrel'?'active':''}" onclick="go('newrel')">+ Релиз</button>
     ${u.role==='admin'?`<button class="nlink ${active==='admin'?'active':''}" onclick="go('admin')">Админ-панель</button>`:''}
     <button class="nlink" onclick="logout()">Выйти (${esc(u.name.split(' ')[0])})</button>`;
 }
-function logout(){session=null;persist();toast('Вы вышли из аккаунта');go('landing')}
+function logout(){
+  session=null;persist();toast('Вы вышли из аккаунта');go('landing');
+  if(chatPollTimer){clearInterval(chatPollTimer);chatPollTimer=null;}
+}
 
 /* ================= LANDING ================= */
 const PLATS=['Яндекс Музыка','VK Музыка','Звук','МТС Музыка','Spotify','Apple Music','YouTube Music','YouTube ID','Deezer','Bandlink','Tidal','Amazon Music','SoundCloud'];
@@ -671,12 +900,32 @@ document.getElementById('f-reg').addEventListener('submit',e=>{
   go('cabinet');
 });
 
-/* ================= КАБИНЕТ ================= */
+/* ================= КАБИНЕТ + ЧАТ ================= */
 const STATUS={moderation:'На модерации',approved:'Одобрен',rejected:'Отклонён'};
+
+function cabTab(tab){
+  cabCurrentTab=tab;
+  document.getElementById('cabtab-rel').classList.toggle('on',tab==='rel');
+  document.getElementById('cabtab-chat').classList.toggle('on',tab==='chat');
+  document.getElementById('cab-rel-section').style.display=tab==='rel'?'block':'none';
+  document.getElementById('cab-chat-section').style.display=tab==='chat'?'flex':'none';
+  if(tab==='chat'){
+    renderChat();
+    startChatPolling();
+    setTimeout(scrollChatBottom,50);
+  }else{
+    stopChatPolling();
+  }
+}
+
 function renderCab(){
   const u=me();if(!u)return;
   document.getElementById('cab-name').textContent=u.name;
   document.getElementById('cab-email').textContent=u.email+' · на платформе с '+fmt(u.ts);
+
+  /* Обновляем счётчик чата */
+  document.getElementById('chat-cnt').textContent=chat.length;
+
   const mine=releases.filter(r=>r.userId===u.id);
   const c=k=>mine.filter(r=>r.status===k).length;
   document.getElementById('cab-chips').innerHTML=`
@@ -708,10 +957,147 @@ function renderCab(){
     </div>`).join('')
   :`<div class="empty"><div class="big">🎛️</div><b>Здесь пока пусто</b><p style="margin:10px 0 20px">${cabFilter==='all'?'Самое время выпустить первый релиз.':'По этому фильтру релизов нет.'}</p>
      <button class="btn" onclick="go('newrel')">Создать релиз</button></div>`;
+
+  /* Если активна вкладка чата — перерисовать */
+  if(cabCurrentTab==='chat')renderChat();
 }
 function delRel(id){
   if(!confirm('Удалить релиз безвозвратно?'))return;
   releases=releases.filter(r=>r.id!==id);persist();toast('Релиз удалён');renderCab();
+}
+
+/* ================= ЧАТ (Telegram-style) ================= */
+let chatPollTimer=null;
+let lastSeenMsgId=null;
+
+function startChatPolling(){
+  stopChatPolling();
+  chatPollTimer=setInterval(()=>{
+    /* Проверяем новые сообщения из localStorage */
+    const freshChat=LS.get('vln_chat',[]);
+    if(freshChat.length!==chat.length){
+      chat=freshChat;
+      renderChat();
+    }
+  },2000);
+}
+function stopChatPolling(){
+  if(chatPollTimer){clearInterval(chatPollTimer);chatPollTimer=null;}
+}
+
+function formatMsgTime(ts){
+  const d=new Date(ts);
+  return d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+}
+function formatDateSep(ts){
+  const d=new Date(ts);
+  const today=new Date();
+  const yesterday=new Date();yesterday.setDate(today.getDate()-1);
+  if(d.toDateString()===today.toDateString())return 'Сегодня';
+  if(d.toDateString()===yesterday.toDateString())return 'Вчера';
+  return d.toLocaleDateString('ru-RU',{day:'numeric',month:'long'});
+}
+
+function renderChat(){
+  const container=document.getElementById('chat-messages');
+  const onlineEl=document.getElementById('chat-online-count');
+  const u=me();
+  if(!u)return;
+
+  if(onlineEl)onlineEl.textContent=users.filter(x=>x.role!=='admin').length;
+
+  if(!chat.length){
+    container.innerHTML=`
+      <div class="chat-empty">
+        <div class="ico">💬</div>
+        <b>Пока нет сообщений</b>
+        <p>Будь первым, кто напишет в общем чате!</p>
+      </div>`;
+    return;
+  }
+
+  let html='';
+  let lastDate='';
+  chat.forEach((m,i)=>{
+    const dateSep=formatDateSep(m.ts);
+    if(dateSep!==lastDate){
+      html+=`<div class="chat-date-sep"><span>${dateSep}</span></div>`;
+      lastDate=dateSep;
+    }
+    const isSelf=m.userId===u.id;
+    const isAdmin=m.role==='admin';
+    const color=avaColor(m.userId);
+    const letter=avaLetter(m.userName);
+    const prevMsg=i>0?chat[i-1]:null;
+    const sameAuthor=prevMsg&&prevMsg.userId===m.userId&&(m.ts-prevMsg.ts)<300000&&formatDateSep(prevMsg.ts)===dateSep;
+
+    html+=`<div class="msg-row ${isSelf?'self':''}">
+      ${!sameAuthor?`<div class="msg-ava" style="background:${color}">${esc(letter)}</div>`:'<div style="width:34px;flex:none"></div>'}
+      <div class="msg-body">
+        ${!sameAuthor?`<div class="msg-name">${esc(m.userName)}${isAdmin?'<span class="msg-admin-tag">модератор</span>':''}</div>`:''}
+        <div class="msg-bubble">${esc(m.text).replace(/\n/g,'<br>')}</div>
+        <div class="msg-time">${formatMsgTime(m.ts)}</div>
+      </div>
+    </div>`;
+  });
+  container.innerHTML=html;
+
+  /* Автоскролл только если пользователь находится внизу */
+  const nearBottom=container.scrollHeight-container.scrollTop-container.clientHeight<150;
+  if(nearBottom||chat.length<=3)scrollChatBottom();
+}
+
+function scrollChatBottom(){
+  const c=document.getElementById('chat-messages');
+  if(c)c.scrollTop=c.scrollHeight;
+}
+
+function sendChatMessage(){
+  const u=me();if(!u)return;
+  const input=document.getElementById('chat-input');
+  const text=input.value.trim();
+  if(!text)return;
+  if(text.length>1000){toast('Сообщение слишком длинное','err');return;}
+
+  const msg={
+    id:uid(),
+    userId:u.id,
+    userName:u.name,
+    role:u.role,
+    text:text,
+    ts:Date.now()
+  };
+  chat.push(msg);
+
+  /* Ограничиваем историю 500 сообщениями */
+  if(chat.length>500)chat=chat.slice(-500);
+
+  persist();
+  input.value='';
+  input.style.height='auto';
+  renderChat();
+  setTimeout(scrollChatBottom,30);
+}
+
+/* Инициализация чат-инпута */
+function initChatInput(){
+  const input=document.getElementById('chat-input');
+  const sendBtn=document.getElementById('chat-send');
+  if(!input||!sendBtn)return;
+
+  input.addEventListener('input',function(){
+    this.style.height='auto';
+    this.style.height=Math.min(this.scrollHeight,120)+'px';
+  });
+
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Enter'&&!e.shiftKey){
+      e.preventDefault();
+      sendChatMessage();
+    }
+  });
+
+  sendBtn.addEventListener('click',sendChatMessage);
 }
 
 /* ================= ФОРМА РЕЛИЗА ================= */
@@ -729,7 +1115,7 @@ function initForm(){
 
 function addTrack(){
   const box=document.getElementById('tracks'),idx=box.children.length;
-  const row=document.createElement('div');row.className='trk';row.dataset.idx=idx;
+  const row=document.createElement('div');row.className='trk';row.dataset.idx=String(idx);
   row.innerHTML=`
     <span>${idx+1}</span>
     <input type="text" placeholder="Название трека" maxlength="80">
@@ -738,16 +1124,25 @@ function addTrack(){
     <button type="button" class="rm-btn" title="Убрать">✕</button>`;
   row.querySelector('.rm-btn').onclick=()=>{
     if(box.children.length>1){
-      const removedIdx=parseInt(row.dataset.idx);
-      delete trackAudios[removedIdx];
       row.remove();
-      [...box.children].forEach((r,i)=>{r.dataset.idx=i;r.querySelector('span').textContent=i+1;
-        const wavInput=r.querySelector('input[type=file]');wavInput.id='wav-'+i;
-        const wavBtn=r.querySelector('.wav-btn');wavBtn.onclick=()=>document.getElementById('wav-'+i).click();
-        if(trackAudios[i]){wavBtn.classList.add('loaded');wavBtn.textContent='✓ WAV';}
-        else{wavBtn.classList.remove('loaded');wavBtn.textContent='🎵 .WAV';}
+      /* Переиндексируем оставшиеся треки */
+      const newAudios={};
+      [...box.children].forEach((r,i)=>{
+        const oldIdx=parseInt(r.dataset.idx);
+        r.dataset.idx=String(i);
+        r.querySelector('span').textContent=String(i+1);
+        const wavInput=r.querySelector('input[type=file]');
+        wavInput.id='wav-'+i;
+        const wavBtn=r.querySelector('.wav-btn');
+        wavBtn.onclick=()=>document.getElementById('wav-'+i).click();
+        if(trackAudios[oldIdx]){
+          newAudios[i]=trackAudios[oldIdx];
+          wavBtn.classList.add('loaded');wavBtn.textContent='✓ WAV';
+        }else{
+          wavBtn.classList.remove('loaded');wavBtn.textContent='🎵 .WAV';
+        }
       });
-      rebuildTrackAudios();
+      trackAudios=newAudios;
       updPreview();
     }
   };
@@ -757,31 +1152,18 @@ function addTrack(){
     if(!file.name.toLowerCase().endsWith('.wav')&&file.type!=='audio/wav'&&file.type!=='audio/x-wav'){
       toast('Допускается только формат .WAV','err');this.value='';return;
     }
+    if(file.size>25*1024*1024){toast('WAV-файл не должен превышать 25 МБ','err');this.value='';return;}
     const reader=new FileReader();
+    const curIdx=parseInt(row.dataset.idx);
     reader.onload=e=>{
-      trackAudios[idx]={name:file.name.replace(/\.wav$/i,''),data:e.target.result};
+      trackAudios[curIdx]={name:file.name.replace(/\.wav$/i,''),data:e.target.result};
       const btn=row.querySelector('.wav-btn');
       btn.classList.add('loaded');btn.textContent='✓ WAV';
     };
+    reader.onerror=()=>toast('Ошибка чтения файла','err');
     reader.readAsDataURL(file);
   });
   box.appendChild(row);updPreview();
-}
-
-function rebuildTrackAudios(){
-  const newAudios={};
-  document.querySelectorAll('#tracks .trk').forEach((row,i)=>{
-    const btn=row.querySelector('.wav-btn');
-    if(btn.classList.contains('loaded')){
-      const oldKey=Object.keys(trackAudios).find(k=>true);
-      /* сохраняем данные из существующих кнопок */
-      const allKeys=Object.keys(trackAudios);
-      if(allKeys.length>i){
-        newAudios[i]=trackAudios[allKeys[i]];
-      }
-    }
-  });
-  trackAudios=newAudios;
 }
 
 /* Загрузка обложки — только PNG 3000x3000 */
@@ -790,18 +1172,20 @@ document.getElementById('r-cover').addEventListener('change',function(){
   if(!file.name.toLowerCase().endsWith('.png')&&file.type!=='image/png'){
     toast('Обложка должна быть в формате PNG','err');this.value='';return;
   }
+  if(file.size>30*1024*1024){toast('Файл слишком большой (макс. 30 МБ)','err');this.value='';return;}
   const img=new Image(),url=URL.createObjectURL(file);
   img.onload=()=>{
     if(img.width!==3000||img.height!==3000){
       toast('Размер обложки должен быть строго 3000×3000 px (сейчас: '+img.width+'×'+img.height+')','err');
       URL.revokeObjectURL(url);this.value='';return;
     }
+    /* Сжимаем для storage, сохраняя разумное качество */
     const c=document.createElement('canvas');
-    c.width=3000;c.height=3000;
-    c.getContext('2d').drawImage(img,0,0);
-    formCover=c.toDataURL('image/png');
+    c.width=1200;c.height=1200;
+    c.getContext('2d').drawImage(img,0,0,1200,1200);
+    formCover=c.toDataURL('image/jpeg',0.88);
     URL.revokeObjectURL(url);
-    document.getElementById('drop').innerHTML=`<img src="${formCover}" alt=""><div class="drop-info">✓ Обложка загружена (3000×3000 PNG). Нажми, чтобы заменить.</div>`;
+    document.getElementById('drop').innerHTML=`<img src="${formCover}" alt=""><div class="drop-info">✓ Обложка загружена. Нажми, чтобы заменить.</div>`;
     updPreview();
   };
   img.onerror=()=>{toast('Ошибка загрузки изображения','err');URL.revokeObjectURL(url);this.value='';};
@@ -848,6 +1232,7 @@ function showPreview(rel){
     </div>
     <div class="modal-actions">
       <button class="btn ghost" onclick="closePreview()">Закрыть</button>
+      <button class="btn" onclick="closePreview();go('cabinet')">В кабинет</button>
     </div>`;
   document.getElementById('preview-modal').classList.add('on');
 }
@@ -873,12 +1258,12 @@ document.getElementById('f-rel').addEventListener('submit',e=>{
   if(type!=='Сингл'&&tracks.length<2){toast('Для '+(type==='EP'?'EP':'альбома')+' укажите минимум 2 трека','err');ok=false;}
   if(type==='Сингл'&&tracks.length<1){toast('Добавьте хотя бы один трек','err');ok=false;}
   if(!formCover){toast('Загрузите обложку (PNG 3000×3000)','err');ok=false;}
-  
-  /* Проверяем наличие аудиофайлов */
+
   const trackDataArr=[];
   document.querySelectorAll('#tracks .trk').forEach((row,i)=>{
+    const idx=parseInt(row.dataset.idx);
     const name=row.querySelector('input[type="text"]').value.trim()||'Трек '+(i+1);
-    const data=trackAudios[i]?trackAudios[i].data:null;
+    const data=trackAudios[idx]?trackAudios[idx].data:null;
     trackDataArr.push({name,data});
   });
   const hasAudio=trackDataArr.some(t=>t.data);
@@ -896,20 +1281,15 @@ document.getElementById('f-rel').addEventListener('submit',e=>{
     tracks,trackData:trackDataArr,desc:t('r-desc'),cover:formCover,
     status:'moderation',mod:'',ts:Date.now()
   };
-  releases.unshift(rel);persist();
-  
-  /* Показываем модальное окно предпросмотра */
+  releases.unshift(rel);
+
+  /* Сбрасываем форму */
+  formCover='';trackAudios={};
+
+  persist();
   showPreview(rel);
-  
   toast('Релиз «'+rel.title+'» отправлен на модерацию 🎉','ok');
   cabFilter='all';
-  /* После закрытия модалки перейдём в кабинет */
-  const modalObs=new MutationObserver(()=>{
-    if(!document.getElementById('preview-modal').classList.contains('on')){
-      go('cabinet');modalObs.disconnect();
-    }
-  });
-  modalObs.observe(document.getElementById('preview-modal'),{attributes:true,attributeFilter:['class']});
 });
 
 /* ================= АДМИН-ПАНЕЛЬ ================= */
@@ -938,7 +1318,7 @@ function renderAdmin(){
         </div>
         <div class="macts">
           <button class="btn ghost sm" onclick="document.getElementById('mr-${r.id}').classList.toggle('open')">Детали</button>
-          <button class="btn mint sm" onclick="modAct('${r.id}','approved')">✓ Одобрит</button>
+          <button class="btn mint sm" onclick="modAct('${r.id}','approved')">✓ Одобрить</button>
           <button class="btn danger sm" onclick="document.getElementById('mr-${r.id}').classList.add('rej')">✕ Отклонить</button>
         </div>
         <div class="mdet">
@@ -950,7 +1330,7 @@ function renderAdmin(){
               <span style="font-size:13px;font-weight:700">${i+1}. ${esc(t.name)}</span>
               ${t.data?`<br><audio controls preload="none" src="${t.data}" style="width:100%;margin-top:4px"></audio>`:'<br><span style="color:var(--coral);font-size:12px">Аудио не загружено</span>'}
             </div>`).join('')+'</div>':'<p style="margin-top:8px;color:var(--coral)">⚠ Аудиофайлы не загружены</p>'}
-          ${r.cover?'<p style="margin-top:8px;color:var(--mint)">✓ Загружена обложка (PNG 3000×3000)</p>':'<p style="margin-top:8px;opacity:.6">Обложка: автогенерация</p>'}
+          ${r.cover?'<p style="margin-top:8px;color:var(--mint)">✓ Загружена обложка</p>':'<p style="margin-top:8px;opacity:.6">Обложка: автогенерация</p>'}
         </div>
         <div class="rejbox">
           <input placeholder="Причина отклонения (обязательно)" id="rc-${r.id}">
@@ -1000,7 +1380,6 @@ function renderAdmin(){
   }
 }
 
-/* Модерация: одобрение → approved, отклонение → rejected */
 function modAct(id,status){
   const r=releases.find(x=>x.id===id);if(!r)return;
   if(status==='rejected'){
@@ -1019,7 +1398,18 @@ function clearPlog(){
 
 /* ================= СТАРТ ================= */
 if(session&&!me()){session=null;persist();}
+initChatInput();
 go(!session?'landing':(me()?(me().role==='admin'?'admin':'cabinet'):'landing'));
+
+/* Слушаем изменения localStorage между вкладками (для чата) */
+window.addEventListener('storage',(e)=>{
+  if(e.key==='vln_chat'){
+    chat=LS.get('vln_chat',[]);
+    if(cabCurrentTab==='chat'&&document.getElementById('v-cabinet').classList.contains('on')){
+      renderChat();
+    }
+  }
+});
 </script>
 </body>
 </html>
