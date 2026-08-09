@@ -83,8 +83,8 @@ nav{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .view{display:none;animation:fadein .35s ease}
 .view.on{display:block}
 @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.reveal{opacity:0;transform:translateY(26px);transition:.7s cubic-bezier(.2,.7,.2,1)}
-.reveal.in{opacity:1;transform:none}
+html.js .reveal{opacity:0;transform:translateY(26px);transition:.7s cubic-bezier(.2,.7,.2,1)}
+html.js .reveal.in{opacity:1;transform:none}
 
 .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;padding:76px 0 64px}
 .kicker{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:800;letter-spacing:.3em;text-transform:uppercase;color:var(--amber);margin-bottom:22px}
@@ -401,7 +401,8 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
 </style>
 </head>
 <body>
-
+<script>document.documentElement.classList.add('js');</script>
+  
 <header>
   <div class="hwrap">
     <div class="logo" onclick="go('landing')">
@@ -435,7 +436,7 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
       </div>
 
       <!-- ======= БАННЕР «ПОЧЕМУ ИМЕННО МЫ?» ======= -->
-      <div class="why reveal">
+      <div class="why">
         <div class="why-head">
           <div style="flex:1;min-width:260px">
             <div class="kicker">Почему именно мы?</div>
