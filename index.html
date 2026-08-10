@@ -117,7 +117,6 @@ h1 .out{color:transparent;-webkit-text-stroke:2px var(--coral)}
 .pmeta span{font-size:13px;color:var(--mut)}
 .pnum{margin-left:auto;font-size:11px;color:var(--mut);letter-spacing:.14em;border:1px solid var(--line);padding:4px 8px;border-radius:5px}
 
-/* ============ БАННЕР «ПОЧЕМУ ИМЕННО МЫ?» ============ */
 .why{
   margin:20px 0 10px;
   border:2px solid var(--line);
@@ -187,12 +186,12 @@ h1 .out{color:transparent;-webkit-text-stroke:2px var(--coral)}
 .pill{border:1px solid var(--line);background:var(--bg2);padding:10px 22px;border-radius:99px;font-weight:800;font-size:14px;color:var(--mut);white-space:nowrap;transition:.2s}
 .pill:hover{color:var(--amber);border-color:var(--amber)}
 
-.cta{margin:20px 0 80px;border:2px solid var(--line);border-radius:18px;background:
+.cta{margin:20px 0;border:2px solid var(--line);border-radius:18px;background:
   linear-gradient(120deg, rgba(255,180,46,.12), rgba(255,92,73,.1)), var(--panel);
   padding:44px;display:flex;align-items:center;gap:30px;flex-wrap:wrap;position:relative;overflow:hidden}
 .cta::before{content:"ВОЛНА";position:absolute;right:-30px;bottom:-46px;font-family:var(--disp);font-weight:900;font-size:150px;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.06);pointer-events:none}
 .cta h2{font-size:clamp(22px,3vw,34px);flex:1;min-width:260px}
-footer{border-top:1px solid var(--line);padding:26px 0;color:var(--mut);font-size:13px}
+footer{border-top:1px solid var(--line);padding:26px 0;color:var(--mut);font-size:13px;margin:0}
 footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 
 .auth-wrap{display:grid;place-items:center;padding:70px 0 90px}
@@ -201,6 +200,18 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .atabs button{flex:1;background:none;border:none;color:var(--mut);font-family:var(--disp);font-size:14px;font-weight:700;padding:18px;border-bottom:3px solid transparent;transition:.2s}
 .atabs button.on{color:var(--amber);border-bottom-color:var(--amber);background:rgba(255,180,46,.05)}
 .abody{padding:28px}
+.auth-hint{
+  margin-top:18px;
+  background:rgba(109,177,255,.07);
+  border:1px dashed rgba(109,177,255,.4);
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:13px;
+  color:var(--mut);
+  line-height:1.55;
+}
+.auth-hint b{color:var(--sky)}
+.auth-hint code{background:var(--bg2);color:var(--amber);padding:2px 8px;border-radius:4px;font-family:monospace;font-size:12px}
 
 .field{margin-bottom:18px}
 .field label{display:block;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
@@ -211,6 +222,61 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .field.bad .ferr{display:block}
 .shake{animation:shake .4s}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+
+/* Модалка подтверждения кодом */
+.code-modal-body{text-align:center;padding:8px 0}
+.code-modal-body .icon{
+  width:70px;height:70px;border-radius:50%;
+  background:linear-gradient(135deg,var(--amber),var(--coral));
+  display:grid;place-items:center;font-size:32px;
+  margin:0 auto 18px;
+  box-shadow:0 10px 30px rgba(255,92,73,.3);
+}
+.code-modal-body .email{
+  display:inline-block;
+  background:var(--bg2);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:6px 14px;
+  font-size:13px;
+  color:var(--amber);
+  margin:10px 0 20px;
+  font-family:monospace;
+}
+.code-input{
+  width:100%;
+  background:var(--bg2);
+  border:2px solid var(--line);
+  border-radius:12px;
+  color:var(--ink);
+  padding:16px;
+  font-size:28px;
+  font-family:var(--disp);
+  font-weight:800;
+  letter-spacing:.4em;
+  text-align:center;
+  outline:none;
+  transition:.2s;
+}
+.code-input:focus{border-color:var(--amber);box-shadow:3px 3px 0 rgba(255,180,46,.25)}
+.code-input.bad{border-color:var(--coral);animation:shake .4s}
+.code-error{
+  color:var(--coral);
+  font-size:13px;
+  margin-top:8px;
+  font-weight:600;
+  min-height:20px;
+}
+.code-resend{
+  margin-top:18px;
+  font-size:13px;
+  color:var(--mut);
+}
+.code-resend button{
+  background:none;border:none;color:var(--amber);
+  text-decoration:underline;cursor:pointer;
+  font-weight:700;font-size:13px;
+}
 
 .page-head{padding:54px 0 8px;display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap}
 .page-head h2{font-size:clamp(26px,3.6vw,42px);font-weight:900}
@@ -253,7 +319,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .empty{grid-column:1/-1;text-align:center;padding:70px 20px;border:2px dashed var(--line);border-radius:16px;color:var(--mut)}
 .empty .big{font-size:44px;margin-bottom:12px}
 
-/* ============ ЧАТ (TELEGRAM) ============ */
 .chat-wrap{background:var(--tg-bg);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;height:650px;margin-bottom:80px;box-shadow:0 10px 40px rgba(0,0,0,.3)}
 .chat-header{background:var(--tg-panel);padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px}
 .chat-icon{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--coral));display:grid;place-items:center;font-size:20px;box-shadow:0 4px 12px rgba(255,92,73,.3)}
@@ -289,7 +354,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .chat-input::placeholder{color:var(--mut)}
 .chat-send{width:42px;height:42px;border-radius:50%;background:var(--amber);color:#161616;border:none;font-size:18px;flex:none;display:grid;place-items:center;cursor:pointer;transition:.2s;box-shadow:0 4px 12px rgba(255,180,46,.35)}
 .chat-send:hover{background:var(--coral);transform:scale(1.06)}
-.typing{padding:0 20px 6px;font-size:12px;color:var(--mut);font-style:italic;min-height:18px}
 
 .form-grid{display:grid;grid-template-columns:1.25fr .85fr;gap:34px;padding:34px 0 90px;align-items:start}
 .fpanel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:28px}
@@ -370,6 +434,13 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
 .utab td{padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px}
 .utab tr:last-child td{border:none}
 .utab tr:hover td{background:rgba(255,255,255,.02)}
+.type-chip{
+  display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;padding:2px 7px;border-radius:4px;
+}
+.type-chip.reg{background:rgba(53,224,184,.15);color:var(--mint)}
+.type-chip.login{background:rgba(109,177,255,.15);color:var(--sky)}
+.code-cell{font-family:monospace;color:var(--amber);letter-spacing:.15em;font-weight:700}
 
 #toasts{position:fixed;bottom:24px;right:24px;z-index:100;display:flex;flex-direction:column;gap:10px}
 .toast{background:var(--ink);color:#161616;font-weight:800;font-size:14px;padding:14px 18px;border-radius:10px;box-shadow:5px 5px 0 rgba(0,0,0,.45);animation:tin .3s ease;display:flex;gap:10px;align-items:center;max-width:340px}
@@ -397,12 +468,13 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
 }
 @media(max-width:560px){
   .why-grid{grid-template-columns:1fr}
+  .code-input{font-size:22px;letter-spacing:.2em}
 }
 </style>
 </head>
 <body>
 <script>document.documentElement.classList.add('js');</script>
-  
+
 <header>
   <div class="hwrap">
     <div class="logo" onclick="go('landing')">
@@ -435,7 +507,6 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
         <div class="stage reveal" id="stage"></div>
       </div>
 
-      <!-- ======= БАННЕР «ПОЧЕМУ ИМЕННО МЫ?» ======= -->
       <div class="why">
         <div class="why-head">
           <div style="flex:1;min-width:260px">
@@ -445,26 +516,10 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
           <div class="note">Мы сами артисты и знаем, как важно получать роялти вовремя и видеть реальную статистику.</div>
         </div>
         <div class="why-grid">
-          <div class="why-card w1">
-            <div class="wi">🆓</div>
-            <h3>Бесплатно навсегда</h3>
-            <p>Никаких абонплат и скрытых комиссий. Вы забираете 100% своего роялти.</p>
-          </div>
-          <div class="why-card w2">
-            <div class="wi">⚡</div>
-            <h3>Быстрый старт</h3>
-            <p>Подача релиза за 5 минут, модерация до 7 дней — и трек уже на площадках.</p>
-          </div>
-          <div class="why-card w3">
-            <div class="wi">📊</div>
-            <h3>Прозрачная статистика</h3>
-            <p>Прослушивания и роялти по каждой площадке — в реальном времени.</p>
-          </div>
-          <div class="why-card w4">
-            <div class="wi">🤝</div>
-            <h3>Живая поддержка</h3>
-            <p>Отвечаем 24/7 и помогаем на каждом шаге — без ботов и очередей.</p>
-          </div>
+          <div class="why-card w1"><div class="wi">🆓</div><h3>Бесплатно навсегда</h3><p>Никаких абонплат и скрытых комиссий. Вы забираете 100% своего роялти.</p></div>
+          <div class="why-card w2"><div class="wi">⚡</div><h3>Быстрый старт</h3><p>Подача релиза за 5 минут, модерация до 7 дней — и трек уже на площадках.</p></div>
+          <div class="why-card w3"><div class="wi">📊</div><h3>Прозрачная статистика</h3><p>Прослушивания и роялти по каждой площадке — в реальном времени.</p></div>
+          <div class="why-card w4"><div class="wi">🤝</div><h3>Живая поддержка</h3><p>Отвечаем 24/7 и помогаем на каждом шаге — без ботов и очередей.</p></div>
         </div>
       </div>
 
@@ -495,17 +550,30 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
             <button id="tab-log" onclick="authTab('log')">Вход</button>
             <button id="tab-reg" onclick="authTab('reg')">Регистрация</button>
           </div>
+
           <form class="abody" id="f-login" novalidate>
-            <div class="field"><label>E-mail</label><input type="text" id="li-email" placeholder="любой e-mail"><div class="ferr">Введите e-mail</div></div>
-            <div class="field"><label>Пароль</label><input type="password" id="li-pass" placeholder="••••••••"><div class="ferr">Введите пароль</div></div>
-            <button class="btn" style="width:100%;justify-content:center" type="submit">Войти в кабинет</button>
+            <div class="field">
+              <label>E-mail</label>
+              <input type="text" id="li-email" placeholder="you@mail.ru">
+              <div class="ferr">Введите корректный e-mail</div>
+            </div>
+            <button class="btn" style="width:100%;justify-content:center" type="submit">Получить код для входа</button>
+            <div class="auth-hint">Вход без пароля — <b>6-значный код</b> придёт на почту от <code>admin@volna.ru</code>.</div>
           </form>
+
           <form class="abody" id="f-reg" novalidate style="display:none">
-            <div class="field"><label>Имя артиста / лейбла</label><input id="rg-name" placeholder="Северный Звук"><div class="ferr">Минимум 2 символа</div></div>
-            <div class="field"><label>E-mail</label><input type="text" id="rg-email" placeholder="любой e-mail"><div class="ferr">Введите e-mail</div></div>
-            <div class="field"><label>Пароль</label><input type="password" id="rg-pass" placeholder="Минимум 6 символов"><div class="ferr">Пароль — минимум 6 символов</div></div>
-            <div class="field"><label>Повторите пароль</label><input type="password" id="rg-pass2" placeholder="Ещё раз"><div class="ferr">Пароли не совпадают</div></div>
-            <button class="btn" style="width:100%;justify-content:center" type="submit">Создать аккаунт</button>
+            <div class="field">
+              <label>Имя артиста / лейбла</label>
+              <input id="rg-name" placeholder="Северный Звук">
+              <div class="ferr">Минимум 2 символа</div>
+            </div>
+            <div class="field">
+              <label>E-mail</label>
+              <input type="text" id="rg-email" placeholder="you@mail.ru">
+              <div class="ferr">Введите корректный e-mail</div>
+            </div>
+            <button class="btn" style="width:100%;justify-content:center" type="submit">Зарегистрироваться</button>
+            <div class="auth-hint">Регистрация без пароля — <b>6-значный код</b> придёт на почту от <code>admin@volna.ru</code> для подтверждения аккаунта.</div>
           </form>
         </div>
       </div>
@@ -522,18 +590,15 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
         </div>
         <button class="btn" onclick="go('newrel')">+ Новый релиз</button>
       </div>
-
       <div class="cab-tabs">
         <button id="cabtab-rel" class="on" onclick="cabTab('rel')">💿 Мои релизы</button>
         <button id="cabtab-chat" onclick="cabTab('chat')">💬 Общий чат <span class="cnt" id="chat-cnt">0</span></button>
       </div>
-
       <div id="cab-rel-section">
         <div class="chips" id="cab-chips"></div>
         <div class="filters" id="cab-filters"></div>
         <div class="grid" id="cab-grid"></div>
       </div>
-
       <div id="cab-chat-section" style="display:none">
         <div class="chat-wrap">
           <div class="chat-header">
@@ -544,7 +609,6 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
             </div>
           </div>
           <div class="chat-messages" id="chat-messages"></div>
-          <div class="typing" id="chat-typing"></div>
           <div class="chat-input-wrap">
             <textarea class="chat-input" id="chat-input" placeholder="Напишите сообщение..." rows="1" maxlength="1000"></textarea>
             <button class="chat-send" id="chat-send" title="Отправить (Enter)">➤</button>
@@ -633,6 +697,28 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
   </div>
 </footer>
 
+<!-- Модалка подтверждения кодом -->
+<div class="modal-overlay" id="code-modal">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-head">
+      <h3>📧 Подтверждение кодом</h3>
+      <button class="modal-close" onclick="closeCodeModal()">✕</button>
+    </div>
+    <div class="modal-body code-modal-body">
+      <div class="icon">📬</div>
+      <p style="font-size:15px;line-height:1.5">Код подтверждения отправлен на почту от <b style="color:var(--amber)">admin@volna.ru</b></p>
+      <div class="email" id="code-email-display">—</div>
+      <input type="text" class="code-input" id="code-input" placeholder="••••••" maxlength="6" inputmode="numeric">
+      <div class="code-error" id="code-error"></div>
+      <button class="btn" style="width:100%;justify-content:center;margin-top:14px" onclick="verifyCode()">Подтвердить</button>
+      <div class="code-resend">
+        Не пришёл код? <button onclick="resendCode()">Отправить снова</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка предпросмотра релиза -->
 <div class="modal-overlay" id="preview-modal">
   <div class="modal">
     <div class="modal-head">
@@ -651,7 +737,6 @@ const LS={
   get:(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k));return v===null?f:v}catch(e){return f}},
   set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){console.warn('Storage full:',k)}}
 };
-const h=s=>{let x=5381;for(let i=0;i<String(s).length;i++)x=((x<<5)+x+String(s).charCodeAt(i))>>>0;return 'x'+x.toString(36)};
 const uid=()=>'id-'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=t=>new Date(t).toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'numeric'});
@@ -659,23 +744,26 @@ const fmtDt=t=>new Date(t).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit'
 
 let users=LS.get('vln_users',null), releases=LS.get('vln_rel',null),
     seq=LS.get('vln_seq',null), session=LS.get('vln_sess',null),
-    plog=LS.get('vln_plog',null), chat=LS.get('vln_chat',null);
+    clog=LS.get('vln_clog',null), chat=LS.get('vln_chat',null);
 const persist=()=>{
   LS.set('vln_users',users);LS.set('vln_rel',releases);LS.set('vln_seq',seq);
-  LS.set('vln_sess',session);LS.set('vln_plog',plog);LS.set('vln_chat',chat);
+  LS.set('vln_sess',session);LS.set('vln_clog',clog);LS.set('vln_chat',chat);
 };
 
 /* ================= ФИКСИРОВАННЫЙ АДМИН ================= */
+const ADMIN_EMAIL='admin@volna.ru';
+const ADMIN_MASTER_CODE='000000'; /* мастер-код админа */
+
 if(!users){
-  users=[{id:'u-admin',name:'Модератор ВОЛНА',email:'admin@volna.ru',pass:h('admin123'),role:'admin',ts:Date.now()}];
-  releases=[];seq=1;plog=[];chat=[];persist();
+  users=[{id:'u-admin',name:'Модератор ВОЛНА',email:ADMIN_EMAIL,role:'admin',ts:Date.now()}];
+  releases=[];seq=1;clog=[];chat=[];persist();
 }else{
-  if(!users.some(u=>u.email==='admin@volna.ru'&&u.role==='admin')){
-    users.unshift({id:'u-admin',name:'Модератор ВОЛНА',email:'admin@volna.ru',pass:h('admin123'),role:'admin',ts:Date.now()});
+  if(!users.some(u=>u.email===ADMIN_EMAIL&&u.role==='admin')){
+    users.unshift({id:'u-admin',name:'Модератор ВОЛНА',email:ADMIN_EMAIL,role:'admin',ts:Date.now()});
   }
   releases=Array.isArray(releases)?releases:[];
   if(typeof seq!=='number')seq=releases.length+1;
-  if(!Array.isArray(plog))plog=[];
+  if(!Array.isArray(clog))clog=[];
   if(!Array.isArray(chat))chat=[];
   persist();
 }
@@ -683,7 +771,8 @@ if(!users){
 /* ================= ОБЛОЖКИ ================= */
 const PALS=[['#1c1d24','#ffb42e'],['#13211d','#35e0b8'],['#251417','#ff5c49'],['#141a26','#6db1ff'],['#241c0f','#ffd166'],['#211426','#ff8fb2']];
 function makeCover(title,seed){
-  const x=h(seed+title),p=PALS[x%PALS.length],L=String(title||'Р').toUpperCase().replace(/[^А-ЯЁA-Z0-9]/g,'').charAt(0)||'Р';
+  let x=5381;for(let i=0;i<String(seed+title).length;i++)x=((x<<5)+x+String(seed+title).charCodeAt(i))>>>0;
+  const p=PALS[x%PALS.length],L=String(title||'Р').toUpperCase().replace(/[^А-ЯЁA-Z0-9]/g,'').charAt(0)||'Р';
   const svg=`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' fill='${p[0]}'/><circle cx='${300+(x%60)}' cy='${70+(x%50)}' r='86' fill='${p[1]}' opacity='.92'/><rect x='-30' y='292' width='300' height='24' fill='${p[1]}' opacity='.5' transform='rotate(-7 0 300)'/><rect x='150' y='330' width='260' height='12' fill='${p[1]}' opacity='.28' transform='rotate(-7 150 330)'/><text x='34' y='322' font-family='Arial Black,sans-serif' font-size='190' font-weight='900' fill='${p[1]}'>${L}</text></svg>`;
   return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg);
 }
@@ -693,7 +782,7 @@ const cov=r=>r.cover||makeCover(r.title,r.num||r.id||'volna');
 function toast(msg,type=''){
   const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;
   document.getElementById('toasts').appendChild(t);
-  setTimeout(()=>{t.style.transition='.4s';t.style.opacity=0;t.style.transform='translateX(30px)';setTimeout(()=>t.remove(),400)},3200);
+  setTimeout(()=>{t.style.transition='.4s';t.style.opacity=0;t.style.transform='translateX(30px)';setTimeout(()=>t.remove(),400)},3600);
 }
 const me=()=>session?users.find(u=>u.id===session.userId):null;
 
@@ -769,7 +858,6 @@ function runCounters(){
     requestAnimationFrame(step);
   });
 }
-/* Надёжные reveal-анимации: фолбэк, если IO недоступен/не сработал */
 let io=null;
 if('IntersectionObserver' in window){
   io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
@@ -778,27 +866,42 @@ function bindReveals(){
   const els=document.querySelectorAll('.view.on .reveal:not(.in)');
   if(!io){els.forEach(el=>el.classList.add('in'));return;}
   els.forEach(el=>io.observe(el));
-  /* страховка: всё, что уже в зоне видимости, показываем сразу */
   setTimeout(()=>{els.forEach(el=>{const r=el.getBoundingClientRect();if(r.top<window.innerHeight&&r.bottom>0)el.classList.add('in')})},400);
 }
 
-/* ================= ЭКСПОРТ РЕГИСТРАЦИЙ ================= */
-function saveToPasswordLog(name,email,rawPassword){plog.push({name,email,password:rawPassword,registeredAt:new Date().toISOString()});persist()}
-function buildPasswordTxt(){
-  const header='=====================================================\n  ВОЛНА — лог регистраций (password.txt)\n  Сформирован: '+fmtDt(Date.now())+'\n  Всего записей: '+plog.length+'\n=====================================================\n\n';
-  if(!plog.length)return header+'(записей пока нет)\n';
-  const rows=plog.map((e,i)=>'['+String(i+1).padStart(3,'0')+']  '+fmtDt(new Date(e.registeredAt).getTime())+'\n        Имя:     '+(e.name||'—')+'\n        E-mail:  '+e.email+'\n        Пароль:  '+e.password+'\n').join('\n');
+/* ================= ГЕНЕРАЦИЯ КОДА И ЛОГ ================= */
+function generateCode(){return String(Math.floor(100000 + Math.random() * 900000))}
+
+function logCode(email,code,type,name=''){
+  clog.push({
+    email,code,type,name,
+    createdAt:new Date().toISOString()
+  });
+  if(clog.length>200)clog=clog.slice(-200);
+  persist();
+}
+
+function buildCodeTxt(){
+  const header='=====================================================\n  ВОЛНА — лог кодов подтверждения\n  Сформирован: '+fmtDt(Date.now())+'\n  Всего записей: '+clog.length+'\n=====================================================\n\n';
+  if(!clog.length)return header+'(записей пока нет)\n';
+  const rows=clog.map((e,i)=>'['+String(i+1).padStart(3,'0')+']  '+fmtDt(new Date(e.createdAt).getTime())+
+    '\n        Тип:     '+(e.type==='reg'?'Регистрация':'Вход')+
+    '\n        Имя:     '+(e.name||'—')+
+    '\n        E-mail:  '+e.email+
+    '\n        Код:     '+e.code+'\n').join('\n');
   return header+rows+'\n=====================================================\n';
 }
-function downloadPasswordTxt(){
-  const blob=new Blob([buildPasswordTxt()],{type:'text/plain;charset=utf-8'});
+function downloadCodeTxt(){
+  const blob=new Blob([buildCodeTxt()],{type:'text/plain;charset=utf-8'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='password.txt';
+  const a=document.createElement('a');a.href=url;a.download='codes.txt';
   document.body.appendChild(a);a.click();
   setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},300);
 }
 
-/* ================= AUTH ================= */
+/* ================= AUTH (БЕЗ ПАРОЛЯ, ЧЕРЕЗ КОД) ================= */
+let pendingVerify=null; /* {mode:'reg'|'login', name, email, code} */
+
 function authTab(t){
   document.getElementById('tab-log').classList.toggle('on',t==='log');
   document.getElementById('tab-reg').classList.toggle('on',t==='reg');
@@ -809,30 +912,119 @@ function authTab(t){
 const bad=(id,on)=>{const f=document.getElementById(id).closest('.field');f.classList.toggle('bad',on);return !on};
 const emailOk=v=>v.includes('@')&&v.split('@')[0].length>0&&v.split('@')[1].length>0;
 
+/* ЛОГИН: отправляем код */
 document.getElementById('f-login').addEventListener('submit',e=>{
   e.preventDefault();
-  const em=document.getElementById('li-email').value.trim(),pw=document.getElementById('li-pass').value;
-  let ok=bad('li-email',!emailOk(em));ok=bad('li-pass',!pw)&&ok;
+  const em=document.getElementById('li-email').value.trim();
+  let ok=bad('li-email',!emailOk(em));
   if(!ok){document.getElementById('acard').classList.add('shake');return;}
   const u=users.find(x=>x.email.toLowerCase()===em.toLowerCase());
-  if(!u||u.pass!==h(pw)){toast('Неверный e-mail или пароль','err');document.getElementById('acard').classList.add('shake');return;}
-  session={userId:u.id};persist();toast('С возвращением, '+u.name+'!','ok');
-  go(u.role==='admin'?'admin':'cabinet');
+  if(!u){toast('Пользователь с таким e-mail не найден','err');document.getElementById('acard').classList.add('shake');return;}
+
+  /* Генерируем код (для админа — мастер-код 000000 + рандомный) */
+  const code=(u.role==='admin')?ADMIN_MASTER_CODE:generateCode();
+  pendingVerify={mode:'login',email:em,code};
+  logCode(em,code,'login',u.name);
+
+  /* Симулируем отправку на почту — показываем код в тосте */
+  toast('📧 Код отправлен на '+em+' : '+code,'ok');
+  showCodeModal(em);
 });
 
+/* РЕГИСТРАЦИЯ: имя + email */
 document.getElementById('f-reg').addEventListener('submit',e=>{
   e.preventDefault();
-  const nm=document.getElementById('rg-name').value.trim(),em=document.getElementById('rg-email').value.trim(),
-        p1=document.getElementById('rg-pass').value,p2=document.getElementById('rg-pass2').value;
-  let ok=bad('rg-name',nm.length<2);ok=bad('rg-email',!emailOk(em))&&ok;
-  ok=bad('rg-pass',p1.length<6)&&ok;ok=bad('rg-pass2',p1!==p2)&&ok;
+  const nm=document.getElementById('rg-name').value.trim();
+  const em=document.getElementById('rg-email').value.trim();
+  let ok=bad('rg-name',nm.length<2);
+  ok=bad('rg-email',!emailOk(em))&&ok;
   if(users.some(x=>x.email.toLowerCase()===em.toLowerCase())){bad('rg-email',true);toast('Этот e-mail уже зарегистрирован','err');ok=false;}
   if(!ok){document.getElementById('acard').classList.add('shake');return;}
-  const u={id:uid(),name:nm,email:em,pass:h(p1),role:'user',ts:Date.now()};
-  users.push(u);session={userId:u.id};
-  saveToPasswordLog(nm,em,p1);persist();
-  toast('Аккаунт создан. Добро пожаловать!','ok');
-  go('cabinet');
+
+  const code=generateCode();
+  pendingVerify={mode:'reg',name:nm,email:em,code};
+  logCode(em,code,'reg',nm);
+
+  toast('📧 Код подтверждения: '+code+' (от admin@volna.ru)','ok');
+  showCodeModal(em);
+});
+
+/* ================= МОДАЛКА КОДА ================= */
+function showCodeModal(email){
+  document.getElementById('code-email-display').textContent=email;
+  document.getElementById('code-input').value='';
+  document.getElementById('code-input').classList.remove('bad');
+  document.getElementById('code-error').textContent='';
+  document.getElementById('code-modal').classList.add('on');
+  setTimeout(()=>document.getElementById('code-input').focus(),100);
+}
+function closeCodeModal(){
+  document.getElementById('code-modal').classList.remove('on');
+  pendingVerify=null;
+}
+function resendCode(){
+  if(!pendingVerify)return;
+  const newCode=generateCode();
+  pendingVerify.code=newCode;
+  logCode(pendingVerify.email,newCode,pendingVerify.mode,pendingVerify.name||'');
+  toast('📧 Новый код: '+newCode,'ok');
+  document.getElementById('code-input').value='';
+  document.getElementById('code-input').classList.remove('bad');
+  document.getElementById('code-error').textContent='';
+}
+
+function verifyCode(){
+  if(!pendingVerify)return;
+  const input=document.getElementById('code-input');
+  const code=input.value.trim();
+  const errEl=document.getElementById('code-error');
+
+  if(!code||code.length!==6){
+    input.classList.add('bad');
+    errEl.textContent='Введите 6-значный код';
+    return;
+  }
+
+  /* Проверяем: либо текущий код, либо мастер-код админа */
+  const ok=code===pendingVerify.code ||
+    (pendingVerify.mode==='login' &&
+     pendingVerify.email.toLowerCase()===ADMIN_EMAIL.toLowerCase() &&
+     code===ADMIN_MASTER_CODE);
+
+  if(!ok){
+    input.classList.add('bad');
+    errEl.textContent='Неверный код';
+    setTimeout(()=>input.classList.remove('bad'),500);
+    return;
+  }
+
+  /* Успех */
+  if(pendingVerify.mode==='reg'){
+    const u={id:uid(),name:pendingVerify.name,email:pendingVerify.email,role:'user',ts:Date.now()};
+    users.push(u);
+    session={userId:u.id};
+    persist();
+    toast('Аккаунт создан. Добро пожаловать, '+u.name+'!','ok');
+  }else{
+    const u=users.find(x=>x.email.toLowerCase()===pendingVerify.email.toLowerCase());
+    session={userId:u.id};
+    persist();
+    toast('С возвращением, '+u.name+'!','ok');
+  }
+  const targetUser=users.find(x=>x.id===session.userId);
+  closeCodeModal();
+  go(targetUser.role==='admin'?'admin':'cabinet');
+}
+
+/* Enter в поле кода = подтвердить */
+document.getElementById('code-input').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();verifyCode();}
+});
+/* Только цифры */
+document.getElementById('code-input').addEventListener('input',function(){
+  this.value=this.value.replace(/\D/g,'').slice(0,6);
+  document.getElementById('code-error').textContent='';
+  this.classList.remove('bad');
 });
 
 /* ================= КАБИНЕТ + ЧАТ ================= */
@@ -1040,7 +1232,6 @@ function updPreview(){
     `<span class="tag">${ty}</span>${g?`<span class="tag">${esc(g)}</span>`:''}${d?`<span class="tag">${esc(d.split('-').reverse().join('.'))}</span>`:''}${document.getElementById('r-explicit').checked?'<span class="tag e">18+</span>':''}`;
 }
 
-/* ================= ПРЕДПРОСМОТР ================= */
 function showPreview(rel){
   const body=document.getElementById('modal-body');
   let tracksHtml='';
@@ -1067,6 +1258,7 @@ function closePreview(){
   document.querySelectorAll('#modal-body audio').forEach(a=>{a.pause();a.currentTime=0;});
 }
 document.getElementById('preview-modal').addEventListener('click',function(e){if(e.target===this)closePreview()});
+document.getElementById('code-modal').addEventListener('click',function(e){if(e.target===this)closeCodeModal()});
 
 /* ================= ОТПРАВКА РЕЛИЗА ================= */
 document.getElementById('f-rel').addEventListener('submit',e=>{
@@ -1111,7 +1303,7 @@ function renderAdmin(){
     <div class="chip c2"><b>${c('approved')}</b><span>Одобренные</span></div>
     <div class="chip c4"><b>${c('rejected')}</b><span>Отклонённые</span></div>
     <div class="chip c1"><b>${users.filter(u=>u.role!=='admin').length}</b><span>Артистов</span></div>`;
-  const T=[['queue','Очередь модерации',q.length],['all','Все релизы',releases.length],['users','Пользователи',users.length],['plog','Лог паролей',plog.length]];
+  const T=[['queue','Очередь модерации',q.length],['all','Все релизы',releases.length],['users','Пользователи',users.length],['codes','Коды подтверждений',clog.length]];
   document.getElementById('adm-tabs').innerHTML=T.map(([k,l,n])=>
     `<button class="${admTab===k?'on':''}" onclick="admTab='${k}';renderAdmin()">${l}<span class="cnt">${n}</span></button>`).join('');
   const body=document.getElementById('adm-body');
@@ -1167,19 +1359,27 @@ function renderAdmin(){
         <td>${releases.filter(r=>r.userId===u.id).length}</td><td>${fmt(u.ts)}</td></tr>`).join('')
       :'<tr><td colspan="5" style="color:var(--mut)">Пользователи ещё не зарегистрированы</td></tr>'}</table>`;
   }
-  else if(admTab==='plog'){
+  else if(admTab==='codes'){
     body.innerHTML=`
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
-        <button class="btn" onclick="downloadPasswordTxt()">⬇ Скачать password.txt</button>
-        <button class="btn ghost" onclick="clearPlog()">🗑 Очистить лог</button>
+      <div class="auth-hint" style="margin:0 0 20px;width:100%">
+        Все отправленные коды. Мастер-код админа <code>admin@volna.ru</code>: <b>${ADMIN_MASTER_CODE}</b>.
       </div>
-      ${plog.length?
-        `<table class="utab"><tr><th>#</th><th>Дата</th><th>Имя</th><th>E-mail</th><th>Пароль</th></tr>
-          ${plog.map((e,i)=>`<tr><td>${i+1}</td><td>${fmtDt(new Date(e.registeredAt).getTime())}</td>
-            <td><b>${esc(e.name)}</b></td><td>${esc(e.email)}</td>
-            <td style="font-family:monospace;color:var(--amber)">${esc(e.password)}</td></tr>`).join('')}
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+        <button class="btn" onclick="downloadCodeTxt()">⬇ Скачать codes.txt</button>
+        <button class="btn ghost" onclick="clearCodes()">🗑 Очистить лог</button>
+      </div>
+      ${clog.length?
+        `<table class="utab"><tr><th>#</th><th>Дата</th><th>Тип</th><th>Имя</th><th>E-mail</th><th>Код</th></tr>
+          ${clog.slice().reverse().map((e,i)=>`<tr>
+            <td>${clog.length-i}</td>
+            <td>${fmtDt(new Date(e.createdAt).getTime())}</td>
+            <td><span class="type-chip ${e.type}">${e.type==='reg'?'Регистрация':'Вход'}</span></td>
+            <td><b>${esc(e.name||'—')}</b></td>
+            <td>${esc(e.email)}</td>
+            <td class="code-cell">${esc(e.code)}</td>
+          </tr>`).join('')}
         </table>`
-        :'<div class="empty"><div class="big">📝</div><b>Лог пуст</b><p style="margin-top:8px">Записи появятся после регистрации пользователей.</p></div>'}`;
+        :'<div class="empty"><div class="big">📧</div><b>Кодов пока нет</b><p style="margin-top:8px">Записи появятся при регистрации и входе пользователей.</p></div>'}`;
   }
 }
 function modAct(id,status){
@@ -1193,9 +1393,9 @@ function modAct(id,status){
   toast(status==='approved'?`Релиз «${r.title}» одобрен ✓ — перемещён в «Одобренные»`:`Релиз «${r.title}» отклонён — перемещён в «Отклонённые»`,status==='approved'?'ok':'err');
   renderAdmin();
 }
-function clearPlog(){
-  if(!confirm('Удалить все записи лога паролей? Сами пользователи останутся.'))return;
-  plog=[];persist();toast('Лог очищен');renderAdmin();
+function clearCodes(){
+  if(!confirm('Удалить все записи лога кодов?'))return;
+  clog=[];persist();toast('Лог очищен');renderAdmin();
 }
 
 /* ================= СТАРТ ================= */
