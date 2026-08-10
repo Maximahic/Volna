@@ -20,22 +20,13 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  font-family:var(--body); background:var(--bg); color:var(--ink); min-height:100vh;
-  background-image:
-    radial-gradient(900px 500px at 85% -10%, rgba(255,180,46,.08), transparent 60%),
-    radial-gradient(700px 500px at -10% 40%, rgba(53,224,184,.06), transparent 60%),
-    radial-gradient(800px 600px at 60% 110%, rgba(255,92,73,.07), transparent 60%),
-    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-  background-size:auto,auto,auto,52px 52px,52px 52px;
-  background-attachment:fixed;
-}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(900px 500px at 85% -10%,rgba(255,180,46,.08),transparent 60%),radial-gradient(700px 500px at -10% 40%,rgba(53,224,184,.06),transparent 60%),radial-gradient(800px 600px at 60% 110%,rgba(255,92,73,.07),transparent 60%),linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:auto,auto,auto,52px 52px,52px 52px;background-attachment:fixed;}
 body::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.05;z-index:0;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");}
 main,header,footer{position:relative;z-index:1}
 ::selection{background:var(--amber);color:#161616}
-
 h1,h2,h3,.disp{font-family:var(--disp)}
 a{color:inherit}
 button{font-family:inherit;cursor:pointer}
@@ -52,6 +43,90 @@ nav{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .nlink:hover{color:var(--ink);border-color:var(--line)}
 .nlink.active{color:var(--amber);border-color:rgba(255,180,46,.4);background:rgba(255,180,46,.07)}
 .role-chip{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;border-radius:5px;background:var(--coral);color:#161616}
+
+/* ============ КОЛОКОЛЬЧИК УВЕДОМЛЕНИЙ ============ */
+.bell-wrap{position:relative}
+.bell{
+  width:42px;height:42px;border-radius:10px;
+  background:var(--panel);border:1px solid var(--line);
+  display:grid;place-items:center;font-size:18px;
+  cursor:pointer;transition:.2s;position:relative;
+}
+.bell:hover{border-color:var(--amber);color:var(--amber);transform:translateY(-2px)}
+.bell-badge{
+  position:absolute;top:-5px;right:-5px;
+  background:var(--coral);color:#fff;
+  font-size:10px;font-weight:800;
+  min-width:18px;height:18px;border-radius:9px;
+  display:grid;place-items:center;padding:0 5px;
+  box-shadow:0 2px 6px rgba(255,92,73,.5);
+  border:2px solid var(--bg);
+}
+.bell-badge.pulse{animation:bell-pulse 1.5s ease infinite}
+@keyframes bell-pulse{
+  0%,100%{box-shadow:0 2px 6px rgba(255,92,73,.5)}
+  50%{box-shadow:0 2px 6px rgba(255,92,73,.5),0 0 0 8px rgba(255,92,73,0)}
+}
+.bell-dropdown{
+  position:absolute;top:calc(100% + 10px);right:0;
+  width:380px;max-width:90vw;max-height:520px;
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.5);
+  overflow:hidden;display:none;z-index:60;
+  flex-direction:column;
+}
+.bell-dropdown.on{display:flex;animation:dropin .2s ease}
+@keyframes dropin{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+.bell-head{
+  padding:14px 18px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.bell-head h4{font-size:14px;font-family:var(--disp)}
+.bell-head .sub{font-size:11px;color:var(--mut);margin-top:2px}
+.bell-clear{
+  background:none;border:none;color:var(--mut);font-size:12px;
+  font-weight:700;cursor:pointer;text-decoration:underline;
+}
+.bell-clear:hover{color:var(--coral)}
+.bell-list{overflow-y:auto;flex:1;max-height:440px}
+.bell-list::-webkit-scrollbar{width:5px}
+.bell-list::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.bell-item{
+  padding:12px 16px;border-bottom:1px solid rgba(50,50,63,.5);
+  display:flex;gap:12px;cursor:pointer;transition:.2s;
+  position:relative;
+}
+.bell-item:hover{background:rgba(255,255,255,.02)}
+.bell-item.unread{background:rgba(109,177,255,.04)}
+.bell-item.unread::before{
+  content:"";position:absolute;left:6px;top:50%;
+  transform:translateY(-50%);width:5px;height:5px;
+  border-radius:50%;background:var(--sky);
+  box-shadow:0 0 6px var(--sky);
+}
+.bell-ico{
+  width:36px;height:36px;border-radius:9px;flex:none;
+  display:grid;place-items:center;font-size:16px;
+  background:var(--bg2);border:1px solid var(--line);
+}
+.bell-ico.code{background:rgba(255,180,46,.1);border-color:rgba(255,180,46,.3);color:var(--amber)}
+.bell-ico.ok{background:rgba(53,224,184,.1);border-color:rgba(53,224,184,.3);color:var(--mint)}
+.bell-ico.err{background:rgba(255,92,73,.1);border-color:rgba(255,92,73,.3);color:var(--coral)}
+.bell-ico.ai{background:linear-gradient(135deg,rgba(109,177,255,.15),rgba(185,131,255,.15));border-color:rgba(109,177,255,.3);color:var(--sky)}
+.bell-body{flex:1;min-width:0}
+.bell-title{font-size:13px;font-weight:700;margin-bottom:2px}
+.bell-msg{font-size:12px;color:var(--mut);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.bell-time{font-size:10px;color:var(--mut);margin-top:4px;opacity:.7}
+.bell-code-chip{
+  display:inline-block;background:var(--bg2);
+  border:1px solid var(--line);border-radius:5px;
+  padding:2px 8px;font-family:monospace;color:var(--amber);
+  font-size:12px;font-weight:700;letter-spacing:.1em;
+  margin-top:4px;cursor:pointer;transition:.2s;
+}
+.bell-code-chip:hover{background:var(--amber);color:#161616;border-color:var(--amber)}
+.bell-empty{padding:50px 20px;text-align:center;color:var(--mut)}
+.bell-empty .ico{font-size:38px;margin-bottom:8px;opacity:.4}
 
 .eq{display:flex;gap:3px;align-items:flex-end;height:22px}
 .eq i{width:4px;border-radius:2px;background:var(--amber);transform-origin:bottom;animation:eq 1.1s ease-in-out infinite}
@@ -70,6 +145,7 @@ nav{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .btn.ghost:hover{border-color:var(--amber);color:var(--amber)}
 .btn.mint{background:var(--mint);box-shadow:4px 4px 0 rgba(0,0,0,.4)}
 .btn.danger{background:var(--coral);box-shadow:4px 4px 0 rgba(0,0,0,.4);color:#161616}
+.btn.sky{background:var(--sky);box-shadow:4px 4px 0 rgba(0,0,0,.4)}
 .btn.sm{padding:8px 14px;font-size:13px;box-shadow:3px 3px 0 rgba(0,0,0,.35)}
 .btn:disabled{opacity:.4;pointer-events:none}
 
@@ -103,7 +179,7 @@ h1 .out{color:transparent;-webkit-text-stroke:2px var(--coral)}
 
 .stage{position:relative;display:flex;justify-content:center;min-height:420px}
 .vinyl{position:absolute;width:340px;height:340px;border-radius:50%;right:-26px;top:24px;z-index:0;
-  background:repeating-radial-gradient(circle at 50% 50%, #0d0d11 0 2px, #191920 2px 5px);
+  background:repeating-radial-gradient(circle at 50% 50%,#0d0d11 0 2px,#191920 2px 5px);
   border:2px solid #000;animation:spin 7s linear infinite;box-shadow:0 20px 60px rgba(0,0,0,.6)}
 .vinyl::after{content:"";position:absolute;inset:38%;border-radius:50%;background:var(--coral);border:6px solid #0d0d11}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -117,45 +193,18 @@ h1 .out{color:transparent;-webkit-text-stroke:2px var(--coral)}
 .pmeta span{font-size:13px;color:var(--mut)}
 .pnum{margin-left:auto;font-size:11px;color:var(--mut);letter-spacing:.14em;border:1px solid var(--line);padding:4px 8px;border-radius:5px}
 
-.why{
-  margin:20px 0 10px;
-  border:2px solid var(--line);
-  border-radius:20px;
-  padding:44px 40px;
-  background:
-    linear-gradient(135deg, rgba(109,177,255,.09), rgba(53,224,184,.06) 55%, rgba(255,180,46,.08)),
-    var(--panel);
-  position:relative;
-  overflow:hidden;
-}
-.why::before{
-  content:"ВОЛНА";
-  position:absolute;right:-24px;top:-58px;
-  font-family:var(--disp);font-weight:900;font-size:170px;
-  color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.05);
-  pointer-events:none;
-}
+.why{margin:20px 0 10px;border:2px solid var(--line);border-radius:20px;padding:44px 40px;
+  background:linear-gradient(135deg,rgba(109,177,255,.09),rgba(53,224,184,.06) 55%,rgba(255,180,46,.08)),var(--panel);
+  position:relative;overflow:hidden;}
+.why::before{content:"ВОЛНА";position:absolute;right:-24px;top:-58px;font-family:var(--disp);font-weight:900;font-size:170px;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.05);pointer-events:none;}
 .why-head{display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap;margin-bottom:30px}
 .why-head h2{font-size:clamp(24px,3.2vw,38px);font-weight:900;flex:1;min-width:260px}
 .why-head .note{color:var(--mut);font-size:14px;max-width:34ch;line-height:1.55}
 .why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;position:relative;z-index:1}
-.why-card{
-  background:var(--bg2);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:24px 22px;
-  transition:.3s;
-  position:relative;
-  overflow:hidden;
-}
+.why-card{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:24px 22px;transition:.3s;position:relative;overflow:hidden;}
 .why-card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--wc,var(--amber));opacity:.85}
 .why-card:hover{transform:translateY(-6px);box-shadow:var(--hard);border-color:#454557}
-.why-card .wi{
-  width:48px;height:48px;border-radius:12px;
-  display:grid;place-items:center;font-size:22px;
-  margin-bottom:16px;
-  background:rgba(255,180,46,.12);border:1px solid rgba(255,180,46,.35);
-}
+.why-card .wi{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:22px;margin-bottom:16px;background:rgba(255,180,46,.12);border:1px solid rgba(255,180,46,.35);}
 .why-card h3{font-size:15px;margin-bottom:8px}
 .why-card p{color:var(--mut);font-size:13.5px;line-height:1.6}
 .why-card.w2 .wi{background:rgba(53,224,184,.1);border-color:rgba(53,224,184,.35)}
@@ -186,9 +235,7 @@ h1 .out{color:transparent;-webkit-text-stroke:2px var(--coral)}
 .pill{border:1px solid var(--line);background:var(--bg2);padding:10px 22px;border-radius:99px;font-weight:800;font-size:14px;color:var(--mut);white-space:nowrap;transition:.2s}
 .pill:hover{color:var(--amber);border-color:var(--amber)}
 
-.cta{margin:20px 0;border:2px solid var(--line);border-radius:18px;background:
-  linear-gradient(120deg, rgba(255,180,46,.12), rgba(255,92,73,.1)), var(--panel);
-  padding:44px;display:flex;align-items:center;gap:30px;flex-wrap:wrap;position:relative;overflow:hidden}
+.cta{margin:20px 0;border:2px solid var(--line);border-radius:18px;background:linear-gradient(120deg,rgba(255,180,46,.12),rgba(255,92,73,.1)),var(--panel);padding:44px;display:flex;align-items:center;gap:30px;flex-wrap:wrap;position:relative;overflow:hidden}
 .cta::before{content:"ВОЛНА";position:absolute;right:-30px;bottom:-46px;font-family:var(--disp);font-weight:900;font-size:150px;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.06);pointer-events:none}
 .cta h2{font-size:clamp(22px,3vw,34px);flex:1;min-width:260px}
 footer{border-top:1px solid var(--line);padding:26px 0;color:var(--mut);font-size:13px;margin:0}
@@ -200,16 +247,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .atabs button{flex:1;background:none;border:none;color:var(--mut);font-family:var(--disp);font-size:14px;font-weight:700;padding:18px;border-bottom:3px solid transparent;transition:.2s}
 .atabs button.on{color:var(--amber);border-bottom-color:var(--amber);background:rgba(255,180,46,.05)}
 .abody{padding:28px}
-.auth-hint{
-  margin-top:18px;
-  background:rgba(109,177,255,.07);
-  border:1px dashed rgba(109,177,255,.4);
-  border-radius:10px;
-  padding:12px 14px;
-  font-size:13px;
-  color:var(--mut);
-  line-height:1.55;
-}
+.auth-hint{margin-top:18px;background:rgba(109,177,255,.07);border:1px dashed rgba(109,177,255,.4);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--mut);line-height:1.55}
 .auth-hint b{color:var(--sky)}
 .auth-hint code{background:var(--bg2);color:var(--amber);padding:2px 8px;border-radius:4px;font-family:monospace;font-size:12px}
 
@@ -223,60 +261,114 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .shake{animation:shake .4s}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
 
-/* Модалка подтверждения кодом */
-.code-modal-body{text-align:center;padding:8px 0}
-.code-modal-body .icon{
-  width:70px;height:70px;border-radius:50%;
-  background:linear-gradient(135deg,var(--amber),var(--coral));
-  display:grid;place-items:center;font-size:32px;
-  margin:0 auto 18px;
-  box-shadow:0 10px 30px rgba(255,92,73,.3);
+/* ============ МОДАЛКА ВОЛНА.AI ============ */
+.ai-modal-body{padding:24px}
+.ai-stages{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.ai-stage{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;border-radius:10px;
+  background:var(--bg2);border:1px solid var(--line);
+  opacity:.4;transition:.3s;
 }
-.code-modal-body .email{
+.ai-stage.active{opacity:1;border-color:var(--sky);box-shadow:0 0 20px rgba(109,177,255,.15)}
+.ai-stage.done{opacity:1;border-color:var(--mint)}
+.ai-stage.err{opacity:1;border-color:var(--coral)}
+.ai-stage-ico{
+  width:32px;height:32px;border-radius:8px;flex:none;
+  display:grid;place-items:center;font-size:15px;
+  background:var(--panel);border:1px solid var(--line);
+}
+.ai-stage.active .ai-stage-ico{background:rgba(109,177,255,.15);border-color:var(--sky);color:var(--sky);animation:pulse 1s ease infinite}
+.ai-stage.done .ai-stage-ico{background:rgba(53,224,184,.15);border-color:var(--mint);color:var(--mint)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.ai-stage-txt{flex:1;min-width:0}
+.ai-stage-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.ai-stage-detail{font-size:11px;color:var(--mut);font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.ai-progress{
+  height:4px;background:var(--bg2);border-radius:2px;
+  overflow:hidden;margin:12px 0 16px;
+}
+.ai-progress-bar{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--sky),var(--mint));
+  border-radius:2px;transition:width .3s ease;
+}
+
+.ai-analysis{
+  background:var(--bg2);border:1px solid var(--line);
+  border-radius:10px;padding:14px;margin-bottom:16px;
+  font-family:monospace;font-size:12px;line-height:1.6;
+}
+.ai-analysis-row{display:flex;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px dashed var(--line)}
+.ai-analysis-row:last-child{border:none}
+.ai-analysis-row .lbl{color:var(--mut)}
+.ai-analysis-row .val{color:var(--amber);font-weight:700}
+.trust-bar{
+  height:6px;background:var(--panel);border-radius:3px;
+  overflow:hidden;margin-top:6px;
+}
+.trust-bar-fill{
+  height:100%;border-radius:3px;transition:width .5s ease;
+}
+.trust-low{background:linear-gradient(90deg,var(--coral),#ff8f6b)}
+.trust-mid{background:linear-gradient(90deg,var(--amber),var(--pink))}
+.trust-high{background:linear-gradient(90deg,var(--mint),var(--sky))}
+
+.ai-class-badge{
   display:inline-block;
-  background:var(--bg2);
-  border:1px solid var(--line);
-  border-radius:8px;
-  padding:6px 14px;
-  font-size:13px;
-  color:var(--amber);
-  margin:10px 0 20px;
-  font-family:monospace;
+  padding:3px 10px;border-radius:5px;
+  font-size:11px;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;
 }
-.code-input{
-  width:100%;
-  background:var(--bg2);
-  border:2px solid var(--line);
-  border-radius:12px;
-  color:var(--ink);
-  padding:16px;
-  font-size:28px;
-  font-family:var(--disp);
-  font-weight:800;
-  letter-spacing:.4em;
-  text-align:center;
-  outline:none;
-  transition:.2s;
+.ai-class-badge.trusted{background:rgba(53,224,184,.15);color:var(--mint)}
+.ai-class-badge.standard{background:rgba(255,180,46,.15);color:var(--amber)}
+.ai-class-badge.new{background:rgba(109,177,255,.15);color:var(--sky)}
+.ai-class-badge.suspicious{background:rgba(255,92,73,.15);color:var(--coral)}
+
+/* ============ ВИРТУАЛЬНЫЙ ПОЧТОВЫЙ ЯЩИК ============ */
+.inbox-view{padding:20px 0}
+.inbox-email{
+  background:var(--bg2);border:1px solid var(--line);
+  border-radius:12px;padding:18px 20px;margin-bottom:14px;
+  animation:emailin .4s ease;
 }
+@keyframes emailin{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+.inbox-from{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.inbox-avatar{
+  width:36px;height:36px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,var(--amber),var(--coral));
+  display:grid;place-items:center;font-size:16px;
+  box-shadow:0 4px 10px rgba(255,92,73,.3);
+}
+.inbox-from-info{flex:1;min-width:0}
+.inbox-from-name{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.inbox-from-email{font-size:11px;color:var(--mut);font-family:monospace}
+.inbox-time{font-size:11px;color:var(--mut)}
+.inbox-subject{font-size:15px;font-weight:700;margin-bottom:10px;color:var(--ink)}
+.inbox-body{font-size:13px;color:var(--mut);line-height:1.6;margin-bottom:14px}
+.inbox-code-box{
+  background:var(--panel);border:2px solid var(--amber);
+  border-radius:10px;padding:16px;text-align:center;
+  margin:12px 0;
+}
+.inbox-code-label{font-size:11px;color:var(--mut);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.inbox-code{
+  font-family:var(--disp);font-size:32px;font-weight:900;
+  color:var(--amber);letter-spacing:.3em;
+}
+.inbox-footer{font-size:11px;color:var(--mut);line-height:1.5;font-style:italic;padding-top:10px;border-top:1px dashed var(--line)}
+
+/* Коды модалка */
+.code-modal-body{text-align:center;padding:8px 0}
+.code-modal-body .icon{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--coral));display:grid;place-items:center;font-size:32px;margin:0 auto 18px;box-shadow:0 10px 30px rgba(255,92,73,.3);}
+.code-modal-body .email{display:inline-block;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:6px 14px;font-size:13px;color:var(--amber);margin:10px 0 20px;font-family:monospace;}
+.code-input{width:100%;background:var(--bg2);border:2px solid var(--line);border-radius:12px;color:var(--ink);padding:16px;font-size:28px;font-family:var(--disp);font-weight:800;letter-spacing:.4em;text-align:center;outline:none;transition:.2s}
 .code-input:focus{border-color:var(--amber);box-shadow:3px 3px 0 rgba(255,180,46,.25)}
 .code-input.bad{border-color:var(--coral);animation:shake .4s}
-.code-error{
-  color:var(--coral);
-  font-size:13px;
-  margin-top:8px;
-  font-weight:600;
-  min-height:20px;
-}
-.code-resend{
-  margin-top:18px;
-  font-size:13px;
-  color:var(--mut);
-}
-.code-resend button{
-  background:none;border:none;color:var(--amber);
-  text-decoration:underline;cursor:pointer;
-  font-weight:700;font-size:13px;
-}
+.code-error{color:var(--coral);font-size:13px;margin-top:8px;font-weight:600;min-height:20px}
+.code-resend{margin-top:18px;font-size:13px;color:var(--mut)}
+.code-resend button{background:none;border:none;color:var(--amber);text-decoration:underline;cursor:pointer;font-weight:700;font-size:13px}
 
 .page-head{padding:54px 0 8px;display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap}
 .page-head h2{font-size:clamp(26px,3.6vw,42px);font-weight:900}
@@ -326,7 +418,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .chat-hinfo .online{font-size:12px;color:var(--mint);margin-top:2px;display:flex;align-items:center;gap:6px}
 .chat-hinfo .online::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 8px var(--mint)}
 .chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:6px;
-  background:radial-gradient(circle at 20% 30%, rgba(255,180,46,.04), transparent 40%),radial-gradient(circle at 80% 70%, rgba(53,224,184,.04), transparent 40%),var(--tg-bg);
+  background:radial-gradient(circle at 20% 30%,rgba(255,180,46,.04),transparent 40%),radial-gradient(circle at 80% 70%,rgba(53,224,184,.04),transparent 40%),var(--tg-bg);
   scroll-behavior:smooth}
 .chat-messages::-webkit-scrollbar{width:6px}
 .chat-messages::-webkit-scrollbar-track{background:transparent}
@@ -434,18 +526,76 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
 .utab td{padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px}
 .utab tr:last-child td{border:none}
 .utab tr:hover td{background:rgba(255,255,255,.02)}
-.type-chip{
-  display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;
-  text-transform:uppercase;padding:2px 7px;border-radius:4px;
-}
+.type-chip{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:4px}
 .type-chip.reg{background:rgba(53,224,184,.15);color:var(--mint)}
 .type-chip.login{background:rgba(109,177,255,.15);color:var(--sky)}
 .code-cell{font-family:monospace;color:var(--amber);letter-spacing:.15em;font-weight:700}
 
+/* ============ ПАНЕЛЬ ВОЛНА.AI В АДМИНКЕ ============ */
+.ai-panel{
+  background:var(--panel);border:2px solid var(--sky);
+  border-radius:16px;padding:24px;margin-bottom:24px;
+  position:relative;overflow:hidden;
+}
+.ai-panel::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(600px 300px at 0% 0%,rgba(109,177,255,.08),transparent 60%);
+}
+.ai-panel-head{display:flex;align-items:center;gap:14px;margin-bottom:20px;position:relative;z-index:1}
+.ai-panel-ico{
+  width:48px;height:48px;border-radius:12px;
+  background:linear-gradient(135deg,var(--sky),var(--pink));
+  display:grid;place-items:center;font-size:22px;
+  box-shadow:0 6px 20px rgba(109,177,255,.3);
+  animation:ai-glow 3s ease infinite;
+}
+@keyframes ai-glow{0%,100%{box-shadow:0 6px 20px rgba(109,177,255,.3)}50%{box-shadow:0 6px 25px rgba(109,177,255,.6)}}
+.ai-panel-title h3{font-size:17px;margin-bottom:2px;display:flex;align-items:center;gap:8px}
+.ai-panel-title .ver{font-size:10px;color:var(--sky);background:rgba(109,177,255,.15);padding:2px 8px;border-radius:4px;font-weight:800;letter-spacing:.1em}
+.ai-panel-title .sub{font-size:12px;color:var(--mut)}
+
+.ai-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;position:relative;z-index:1}
+.ai-stat{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px}
+.ai-stat .lbl{font-size:10px;color:var(--mut);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.ai-stat .val{font-family:var(--disp);font-size:22px;font-weight:800}
+.ai-stat.s1 .val{color:var(--amber)}
+.ai-stat.s2 .val{color:var(--mint)}
+.ai-stat.s3 .val{color:var(--sky)}
+.ai-stat.s4 .val{color:var(--coral)}
+
+.ai-classes{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;position:relative;z-index:1}
+.ai-class-card{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center}
+.ai-class-card .emoji{font-size:24px;margin-bottom:6px}
+.ai-class-card .name{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.ai-class-card .cnt{font-family:var(--disp);font-size:20px;font-weight:800;color:var(--ink)}
+.ai-class-card.trusted .name{color:var(--mint)}
+.ai-class-card.standard .name{color:var(--amber)}
+.ai-class-card.new .name{color:var(--sky)}
+.ai-class-card.suspicious .name{color:var(--coral)}
+
+.ai-log{
+  background:var(--bg2);border:1px solid var(--line);
+  border-radius:10px;padding:16px;margin-top:20px;
+  font-family:monospace;font-size:12px;line-height:1.7;
+  max-height:240px;overflow-y:auto;position:relative;z-index:1;
+}
+.ai-log::-webkit-scrollbar{width:5px}
+.ai-log::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.ai-log-line{display:flex;gap:10px;padding:2px 0}
+.ai-log-line .ts{color:var(--mut);flex:none;width:62px}
+.ai-log-line .lvl{flex:none;font-weight:800;width:44px}
+.ai-log-line .lvl.info{color:var(--sky)}
+.ai-log-line .lvl.ok{color:var(--mint)}
+.ai-log-line .lvl.warn{color:var(--amber)}
+.ai-log-line .lvl.err{color:var(--coral)}
+.ai-log-line .msg{color:var(--ink)}
+
 #toasts{position:fixed;bottom:24px;right:24px;z-index:100;display:flex;flex-direction:column;gap:10px}
-.toast{background:var(--ink);color:#161616;font-weight:800;font-size:14px;padding:14px 18px;border-radius:10px;box-shadow:5px 5px 0 rgba(0,0,0,.45);animation:tin .3s ease;display:flex;gap:10px;align-items:center;max-width:340px}
+.toast{background:var(--ink);color:#161616;font-weight:800;font-size:14px;padding:14px 18px;border-radius:10px;box-shadow:5px 5px 0 rgba(0,0,0,.45);animation:tin .3s ease;display:flex;gap:10px;align-items:center;max-width:380px}
 .toast.err{background:var(--coral);color:#fff}
 .toast.ok{background:var(--mint)}
+.toast.ai{background:linear-gradient(135deg,#2b5278,#4a7ba8);color:#f5f9ff}
+.toast .ico{font-size:18px;flex:none}
 @keyframes tin{from{opacity:0;transform:translateX(30px)}}
 
 @media(max-width:920px){
@@ -465,10 +615,14 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
   .cab-tabs button{flex:1;justify-content:center;padding:10px 12px;font-size:13px}
   .why{padding:30px 22px}
   .why-grid{grid-template-columns:1fr 1fr}
+  .ai-stats{grid-template-columns:1fr 1fr}
+  .ai-classes{grid-template-columns:1fr 1fr}
+  .bell-dropdown{width:340px}
 }
 @media(max-width:560px){
   .why-grid{grid-template-columns:1fr}
   .code-input{font-size:22px;letter-spacing:.2em}
+  .bell-dropdown{width:calc(100vw - 48px);right:-60px}
 }
 </style>
 </head>
@@ -482,6 +636,24 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
       <div><b>ВОЛНА</b><small>дистрибуция</small></div>
     </div>
     <nav id="nav"></nav>
+
+    <!-- Колокольчик уведомлений -->
+    <div class="bell-wrap">
+      <div class="bell" onclick="toggleBell(event)">
+        🔔
+        <span class="bell-badge" id="bell-badge" style="display:none">0</span>
+      </div>
+      <div class="bell-dropdown" id="bell-dropdown">
+        <div class="bell-head">
+          <div>
+            <h4>Уведомления</h4>
+            <div class="sub" id="bell-sub">нет новых</div>
+          </div>
+          <button class="bell-clear" onclick="clearAllNotifs(event)">Очистить</button>
+        </div>
+        <div class="bell-list" id="bell-list"></div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -557,8 +729,8 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
               <input type="text" id="li-email" placeholder="you@mail.ru">
               <div class="ferr">Введите корректный e-mail</div>
             </div>
-            <button class="btn" style="width:100%;justify-content:center" type="submit">Получить код для входа</button>
-            <div class="auth-hint">Вход без пароля — <b>6-значный код</b> придёт на почту от <code>admin@volna.ru</code>.</div>
+            <button class="btn" style="width:100%;justify-content:center" type="submit">🧠 Получить код от ВОЛНА.AI</button>
+            <div class="auth-hint">Вход без пароля — <b>6-значный код</b> придёт на почту от <code>admin@volna.ru</code>. Наша нейросеть анализирует ваш e-mail и генерирует уникальный код.</div>
           </form>
 
           <form class="abody" id="f-reg" novalidate style="display:none">
@@ -572,8 +744,8 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
               <input type="text" id="rg-email" placeholder="you@mail.ru">
               <div class="ferr">Введите корректный e-mail</div>
             </div>
-            <button class="btn" style="width:100%;justify-content:center" type="submit">Зарегистрироваться</button>
-            <div class="auth-hint">Регистрация без пароля — <b>6-значный код</b> придёт на почту от <code>admin@volna.ru</code> для подтверждения аккаунта.</div>
+            <button class="btn" style="width:100%;justify-content:center" type="submit">🧠 Зарегистрироваться через ВОЛНА.AI</button>
+            <div class="auth-hint">Регистрация без пароля — <b>6-значный код</b> придёт на почту от <code>admin@volna.ru</code> после проверки нейросетью.</div>
           </form>
         </div>
       </div>
@@ -592,12 +764,21 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
       </div>
       <div class="cab-tabs">
         <button id="cabtab-rel" class="on" onclick="cabTab('rel')">💿 Мои релизы</button>
+        <button id="cabtab-inbox" onclick="cabTab('inbox')">📧 Моя почта <span class="cnt" id="inbox-cnt">0</span></button>
         <button id="cabtab-chat" onclick="cabTab('chat')">💬 Общий чат <span class="cnt" id="chat-cnt">0</span></button>
       </div>
       <div id="cab-rel-section">
         <div class="chips" id="cab-chips"></div>
         <div class="filters" id="cab-filters"></div>
         <div class="grid" id="cab-grid"></div>
+      </div>
+      <div id="cab-inbox-section" style="display:none">
+        <div style="margin:20px 0 30px">
+          <div class="auth-hint" style="margin:0">
+            📬 Здесь отображаются все письма с кодами, которые приходили на вашу почту <code id="my-inbox-email">—</code> от <code>admin@volna.ru</code>. Нажмите на код, чтобы скопировать.
+          </div>
+        </div>
+        <div id="my-inbox-list"></div>
       </div>
       <div id="cab-chat-section" style="display:none">
         <div class="chat-wrap">
@@ -697,6 +878,21 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
   </div>
 </footer>
 
+<!-- Модалка ВОЛНА.AI (процесс генерации) -->
+<div class="modal-overlay" id="ai-modal">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-head">
+      <h3 style="display:flex;align-items:center;gap:10px">🧠 ВОЛНА.AI <span style="font-size:10px;color:var(--sky);background:rgba(109,177,255,.15);padding:2px 8px;border-radius:4px;font-weight:800;letter-spacing:.1em">v2.4</span></h3>
+    </div>
+    <div class="ai-modal-body">
+      <div class="ai-stages" id="ai-stages"></div>
+      <div class="ai-progress"><div class="ai-progress-bar" id="ai-progress-bar"></div></div>
+      <div class="ai-analysis" id="ai-analysis" style="display:none"></div>
+      <div id="ai-status" style="text-align:center;font-size:13px;color:var(--mut);min-height:20px"></div>
+    </div>
+  </div>
+</div>
+
 <!-- Модалка подтверждения кодом -->
 <div class="modal-overlay" id="code-modal">
   <div class="modal" style="max-width:460px">
@@ -706,13 +902,13 @@ table.utab{width:100%;border-collapse:collapse;margin-bottom:90px;background:var
     </div>
     <div class="modal-body code-modal-body">
       <div class="icon">📬</div>
-      <p style="font-size:15px;line-height:1.5">Код подтверждения отправлен на почту от <b style="color:var(--amber)">admin@volna.ru</b></p>
+      <p style="font-size:15px;line-height:1.5">Код отправлен на почту от <b style="color:var(--amber)">admin@volna.ru</b></p>
       <div class="email" id="code-email-display">—</div>
       <input type="text" class="code-input" id="code-input" placeholder="••••••" maxlength="6" inputmode="numeric">
       <div class="code-error" id="code-error"></div>
       <button class="btn" style="width:100%;justify-content:center;margin-top:14px" onclick="verifyCode()">Подтвердить</button>
       <div class="code-resend">
-        Не пришёл код? <button onclick="resendCode()">Отправить снова</button>
+        Не пришёл код? <button onclick="resendCode()">Отправить снова</button> · <button onclick="openInboxFromCode()">Открыть почту</button>
       </div>
     </div>
   </div>
@@ -741,22 +937,33 @@ const uid=()=>'id-'+Date.now().toString(36)+Math.random().toString(36).slice(2,7
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=t=>new Date(t).toLocaleDateString('ru-RU',{day:'numeric',month:'short',year:'numeric'});
 const fmtDt=t=>new Date(t).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+const fmtTime=t=>new Date(t).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+const fmtRel=t=>{
+  const d=new Date(t),now=Date.now(),diff=now-t;
+  if(diff<60000)return 'только что';
+  if(diff<3600000)return Math.floor(diff/60000)+' мин назад';
+  if(diff<86400000)return Math.floor(diff/3600000)+' ч назад';
+  if(diff<172800000)return 'вчера';
+  return fmt(t);
+};
 
-let users=LS.get('vln_users',null), releases=LS.get('vln_rel',null),
-    seq=LS.get('vln_seq',null), session=LS.get('vln_sess',null),
-    clog=LS.get('vln_clog',null), chat=LS.get('vln_chat',null);
+let users=LS.get('vln_users',null),releases=LS.get('vln_rel',null),
+    seq=LS.get('vln_seq',null),session=LS.get('vln_sess',null),
+    clog=LS.get('vln_clog',null),chat=LS.get('vln_chat',null),
+    notifs=LS.get('vln_notifs',null),inbox=LS.get('vln_inbox',null),
+    aiLog=LS.get('vln_ai_log',null);
 const persist=()=>{
   LS.set('vln_users',users);LS.set('vln_rel',releases);LS.set('vln_seq',seq);
   LS.set('vln_sess',session);LS.set('vln_clog',clog);LS.set('vln_chat',chat);
+  LS.set('vln_notifs',notifs);LS.set('vln_inbox',inbox);LS.set('vln_ai_log',aiLog);
 };
 
-/* ================= ФИКСИРОВАННЫЙ АДМИН ================= */
 const ADMIN_EMAIL='admin@volna.ru';
-const ADMIN_MASTER_CODE='000000'; /* мастер-код админа */
+const ADMIN_MASTER_CODE='000000';
 
 if(!users){
   users=[{id:'u-admin',name:'Модератор ВОЛНА',email:ADMIN_EMAIL,role:'admin',ts:Date.now()}];
-  releases=[];seq=1;clog=[];chat=[];persist();
+  releases=[];seq=1;clog=[];chat=[];notifs=[];inbox=[];aiLog=[];persist();
 }else{
   if(!users.some(u=>u.email===ADMIN_EMAIL&&u.role==='admin')){
     users.unshift({id:'u-admin',name:'Модератор ВОЛНА',email:ADMIN_EMAIL,role:'admin',ts:Date.now()});
@@ -765,6 +972,9 @@ if(!users){
   if(typeof seq!=='number')seq=releases.length+1;
   if(!Array.isArray(clog))clog=[];
   if(!Array.isArray(chat))chat=[];
+  if(!Array.isArray(notifs))notifs=[];
+  if(!Array.isArray(inbox))inbox=[];
+  if(!Array.isArray(aiLog))aiLog=[];
   persist();
 }
 
@@ -779,16 +989,350 @@ function makeCover(title,seed){
 const cov=r=>r.cover||makeCover(r.title,r.num||r.id||'volna');
 
 /* ================= УТИЛИТЫ ================= */
-function toast(msg,type=''){
-  const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;
+function toast(msg,type='',ico=''){
+  const t=document.createElement('div');t.className='toast '+type;
+  t.innerHTML=(ico?`<span class="ico">${ico}</span>`:'')+`<span>${esc(msg)}</span>`;
   document.getElementById('toasts').appendChild(t);
-  setTimeout(()=>{t.style.transition='.4s';t.style.opacity=0;t.style.transform='translateX(30px)';setTimeout(()=>t.remove(),400)},3600);
+  setTimeout(()=>{t.style.transition='.4s';t.style.opacity=0;t.style.transform='translateX(30px)';setTimeout(()=>t.remove(),400)},4000);
 }
 const me=()=>session?users.find(u=>u.id===session.userId):null;
 
 const AVA_COLS=['#ff5c49','#ffb42e','#35e0b8','#6db1ff','#ff8fb2','#ffd166','#b983ff','#7dd3fc','#fb7185','#34d399'];
 function avaColor(seed){let x=5381;for(let i=0;i<String(seed).length;i++)x=((x<<5)+x+String(seed).charCodeAt(i))>>>0;return AVA_COLS[x%AVA_COLS.length]}
 function avaLetter(name){return (name||'?').trim().charAt(0).toUpperCase()||'?'}
+
+/* ==================================================================
+   🧠 ВОЛНА.AI — НЕЙРОСЕТЬ ДЛЯ ГЕНЕРАЦИИ И РАССЫЛКИ КОДОВ
+   
+   Алгоритм работы:
+   1. Анализ e-mail пользователя (домен, длина, паттерны, возраст)
+   2. Классификация пользователя: trusted / standard / new / suspicious
+   3. Выбор стратегии генерации кода на основе класса
+   4. Генерация уникального 6-значного кода
+   5. Симуляция отправки email (создание виртуального письма)
+   6. Логирование в aiLog и рассылка в уведомления
+   ================================================================== */
+const VolnaAI = {
+  // База доверенных доменов
+  TRUSTED_DOMAINS: ['gmail.com','mail.ru','yandex.ru','ya.ru','yahoo.com','outlook.com','hotmail.com','icloud.com','protonmail.com','vk.com'],
+  // Подозрительные паттерны (одноразовые почты)
+  SUSPICIOUS_DOMAINS: ['tempmail','throwaway','10minutemail','guerrilla','mailinator','temp-mail','fakeinbox','sharklasers'],
+  
+  // ====== АНАЛИЗ ПОЛЬЗОВАТЕЛЯ ======
+  analyze(email, mode='login'){
+    const em = email.toLowerCase().trim();
+    const [user, domain] = em.includes('@') ? em.split('@') : [em,''];
+    const domainL = (domain||'').toLowerCase();
+    
+    // 1. Доверие к домену (0-40 баллов)
+    let domainScore = 0;
+    if(this.TRUSTED_DOMAINS.includes(domainL)) domainScore = 40;
+    else if(domainL.includes('.ru') || domainL.includes('.com') || domainL.includes('.org')) domainScore = 25;
+    else if(domainL.length > 3) domainScore = 15;
+    
+    // 2. Подозрительность (штраф -50)
+    let suspicious = false;
+    if(this.SUSPICIOUS_DOMAINS.some(p => domainL.includes(p))){
+      suspicious = true;
+      domainScore -= 50;
+    }
+    
+    // 3. Паттерн имени (0-20 баллов)
+    let nameScore = 0;
+    if(user.length >= 4 && user.length <= 20) nameScore += 10;
+    if(/^[a-zа-я0-9._-]+$/i.test(user)) nameScore += 10;
+    if(/\d{4,}/.test(user)) nameScore -= 5; // много цифр — хуже
+    if(user.includes('test') || user.includes('fake')) {suspicious = true; nameScore -= 10;}
+    
+    // 4. Активность пользователя в системе (0-25 баллов)
+    let activityScore = 0;
+    const existingUser = users.find(u => u.email.toLowerCase() === em);
+    if(existingUser){
+      const userReleases = releases.filter(r => r.userId === existingUser.id);
+      if(userReleases.length > 0) activityScore += 15;
+      if(userReleases.some(r => r.status === 'approved')) activityScore += 10;
+      const ageDays = (Date.now() - existingUser.ts) / 86400000;
+      if(ageDays > 7) activityScore += 5;
+    }
+    
+    // 5. История попыток (0-15 баллов)
+    let historyScore = 0;
+    const recentCodes = clog.filter(c => c.email === em && (Date.now() - new Date(c.createdAt).getTime()) < 3600000);
+    if(recentCodes.length === 0) historyScore = 15;
+    else if(recentCodes.length <= 2) historyScore = 10;
+    else if(recentCodes.length <= 5) historyScore = 5;
+    else {suspicious = true; historyScore = 0;}
+    
+    const totalScore = Math.max(0, Math.min(100, domainScore + nameScore + activityScore + historyScore));
+    
+    // Классификация
+    let userClass = 'new';
+    if(suspicious) userClass = 'suspicious';
+    else if(totalScore >= 75) userClass = 'trusted';
+    else if(totalScore >= 40) userClass = 'standard';
+    else if(existingUser) userClass = 'standard';
+    
+    return {
+      email: em,
+      domain: domainL,
+      user,
+      mode,
+      score: totalScore,
+      userClass,
+      suspicious,
+      isExisting: !!existingUser,
+      existingUser,
+      metrics: {
+        domainScore,
+        nameScore,
+        activityScore,
+        historyScore,
+        recentAttempts: recentCodes.length
+      },
+      timestamp: Date.now()
+    };
+  },
+  
+  // ====== ГЕНЕРАЦИЯ КОДА ПО КЛАССУ ======
+  generateCode(analysis){
+    // Для админа — мастер-код
+    if(analysis.email === ADMIN_EMAIL.toLowerCase()){
+      return ADMIN_MASTER_CODE;
+    }
+    
+    const cls = analysis.userClass;
+    let code = '';
+    
+    if(cls === 'trusted'){
+      // Доверенные: "красивые" коды с паттернами (но не совсем)
+      const patterns = [
+        () => this._randDigits(6),
+        () => this._pairPattern(),      // 123123
+        () => this._ascending(),        // 123456
+        () => this._randomSix()
+      ];
+      code = patterns[Math.floor(Math.random()*patterns.length)]();
+    } else if(cls === 'standard'){
+      // Обычные: рандомные 6 цифр
+      code = this._randDigits(6);
+    } else if(cls === 'new'){
+      // Новые: слегка "запутанные" (больше уникальности)
+      code = this._highEntropySix();
+    } else if(cls === 'suspicious'){
+      // Подозрительные: коды с проверочной суммой (для мониторинга)
+      code = this._checksumCode();
+    } else {
+      code = this._randDigits(6);
+    }
+    
+    return code;
+  },
+  
+  _randDigits(n){
+    return String(Math.floor(Math.pow(10,n-1) + Math.random() * (Math.pow(10,n) - Math.pow(10,n-1))));
+  },
+  _pairPattern(){
+    const p = String(Math.floor(100 + Math.random()*900));
+    return p + p;
+  },
+  _ascending(){
+    const start = Math.floor(Math.random()*4);
+    return Array.from({length:6},(_,i)=>(start+i)%10).join('');
+  },
+  _randomSix(){
+    let r='';for(let i=0;i<6;i++)r+=Math.floor(Math.random()*10);return r;
+  },
+  _highEntropySix(){
+    // Максимально разные цифры
+    const digits = [];
+    while(digits.length < 6){
+      const d = Math.floor(Math.random()*10);
+      if(!digits.includes(d) || Math.random() < 0.3) digits.push(d);
+    }
+    return digits.join('');
+  },
+  _checksumCode(){
+    // 5 случайных + 1 контрольная цифра (сумма mod 10)
+    const first5 = Array.from({length:5},()=>Math.floor(Math.random()*10));
+    const sum = first5.reduce((a,b)=>a+b,0);
+    const check = sum % 10;
+    return first5.join('') + check;
+  },
+  
+  // ====== ЛОГИРОВАНИЕ ВНУТРЕННЕЕ ======
+  aiLog(msg, lvl='info'){
+    aiLog.unshift({ts:Date.now(), lvl, msg});
+    if(aiLog.length > 100) aiLog = aiLog.slice(0,100);
+    persist();
+  },
+  
+  // ====== ПОЛНЫЙ ЦИКЛ: АНАЛИЗ → ГЕНЕРАЦИЯ → РАССЫЛКА ======
+  async dispatch(email, mode, name=''){
+    this.aiLog(`[ЗАПРОС] mode=${mode}, email=${email}`, 'info');
+    
+    // ЭТАП 1: Анализ
+    await this._delay(600);
+    const analysis = this.analyze(email, mode);
+    this.aiLog(`[АНАЛИЗ] score=${analysis.score}, class=${analysis.userClass}, domain=${analysis.domain}`, 'info');
+    
+    // ЭТАП 2: Проверка безопасности
+    await this._delay(500);
+    if(analysis.suspicious){
+      this.aiLog(`[ПРЕДУПРЕЖДЕНИЕ] Подозрительная активность для ${email}`, 'warn');
+    } else {
+      this.aiLog(`[OK] Пользователь проверен, угроз не обнаружено`, 'ok');
+    }
+    
+    // ЭТАП 3: Генерация кода
+    await this._delay(600);
+    const code = this.generateCode(analysis);
+    this.aiLog(`[ГЕНЕРАЦИЯ] Код создан: ${code} (класс: ${analysis.userClass})`, 'ok');
+    
+    // ЭТАП 4: "Отправка" email
+    await this._delay(500);
+    const emailId = this._sendEmail(email, code, mode, name, analysis);
+    this.aiLog(`[ОТПРАВКА] Email доставлен в почтовый ящик ${email} (id=${emailId.slice(-6)})`, 'ok');
+    
+    // ЭТАП 5: Лог в clog
+    clog.push({email, code, type:mode, name, createdAt:new Date().toISOString(), class:analysis.userClass, score:analysis.score});
+    if(clog.length > 200) clog = clog.slice(-200);
+    persist();
+    
+    return {code, analysis, emailId};
+  },
+  
+  // ====== СОЗДАНИЕ ВИРТУАЛЬНОГО EMAIL ======
+  _sendEmail(to, code, mode, name, analysis){
+    const emailId = uid();
+    const subject = mode === 'reg' 
+      ? 'Подтверждение регистрации на ВОЛНА' 
+      : 'Код для входа в личный кабинет';
+    const greeting = name ? `Здравствуйте, ${name}!` : 'Здравствуйте!';
+    const action = mode === 'reg' ? 'завершить регистрацию' : 'войти в личный кабинет';
+    const body = `${greeting}\n\nВы запросили код для того, чтобы ${action} на платформе музыкальной дистрибуции ВОЛНА.\n\nВаш код действителен 15 минут. Не сообщайте его третьим лицам.`;
+    const footer = `ВОЛНА.AI — нейросеть безопасности (анализ: ${analysis.userClass}, уровень доверия: ${analysis.score}/100)\n\nЭто автоматическое письмо, отвечать на него не нужно.\n\n© 2026 ВОЛНА — дистрибуция музыки`;
+    
+    const email = {
+      id: emailId,
+      to,
+      from: 'admin@volna.ru',
+      fromName: 'ВОЛНА',
+      subject,
+      body,
+      footer,
+      code,
+      mode,
+      ts: Date.now(),
+      class: analysis.userClass,
+      score: analysis.score
+    };
+    
+    inbox.unshift(email);
+    if(inbox.length > 100) inbox = inbox.slice(0,100);
+    
+    // Уведомление в колокольчик
+    addNotification({
+      type: 'code',
+      title: subject,
+      msg: `Код ${code} отправлен на ${to}`,
+      code,
+      ts: Date.now(),
+      email: to
+    });
+    
+    return emailId;
+  },
+  
+  _delay(ms){return new Promise(r=>setTimeout(r,ms));}
+};
+
+/* ================= УВЕДОМЛЕНИЯ (колокольчик) ================= */
+function addNotification(n){
+  const id = uid();
+  notifs.unshift({id, read:false, ...n});
+  if(notifs.length > 50) notifs = notifs.slice(0,50);
+  persist();
+  renderBell();
+  // Пульсация колокольчика
+  const badge = document.getElementById('bell-badge');
+  if(badge){badge.classList.remove('pulse');void badge.offsetWidth;badge.classList.add('pulse');}
+}
+function renderBell(){
+  const badge = document.getElementById('bell-badge');
+  const list = document.getElementById('bell-list');
+  const sub = document.getElementById('bell-sub');
+  const unread = notifs.filter(n => !n.read).length;
+  
+  if(unread > 0){
+    badge.style.display = 'grid';
+    badge.textContent = unread > 9 ? '9+' : unread;
+    sub.textContent = unread + ' непрочитанных';
+  } else {
+    badge.style.display = 'none';
+    badge.classList.remove('pulse');
+    sub.textContent = 'все прочитано';
+  }
+  
+  if(!notifs.length){
+    list.innerHTML = `<div class="bell-empty"><div class="ico">🔕</div><b>Пока тихо</b><p style="font-size:12px;margin-top:4px">Уведомления появятся здесь</p></div>`;
+    return;
+  }
+  
+  list.innerHTML = notifs.map(n => {
+    const icoClass = n.type || 'ok';
+    const ico = n.type === 'code' ? '📧' : n.type === 'ai' ? '🧠' : n.type === 'err' ? '⚠️' : '✓';
+    const codeChip = n.code ? `<div class="bell-code-chip" onclick="copyCode(event,'${esc(n.code)}')">${esc(n.code)}</div>` : '';
+    return `
+      <div class="bell-item ${n.read?'':'unread'}" onclick="markRead('${n.id}')">
+        <div class="bell-ico ${icoClass}">${ico}</div>
+        <div class="bell-body">
+          <div class="bell-title">${esc(n.title)}</div>
+          <div class="bell-msg">${esc(n.msg)}</div>
+          ${codeChip}
+          <div class="bell-time">${fmtRel(n.ts)}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+function markRead(id){
+  const n = notifs.find(x => x.id === id);
+  if(n && !n.read){
+    n.read = true;
+    persist();
+    renderBell();
+  }
+}
+function copyCode(e, code){
+  e.stopPropagation();
+  navigator.clipboard?.writeText(code);
+  toast('Код скопирован: '+code, 'ok', '📋');
+}
+function toggleBell(e){
+  e.stopPropagation();
+  const dd = document.getElementById('bell-dropdown');
+  dd.classList.toggle('on');
+  if(dd.classList.contains('on')){
+    // Помечаем все как прочитанные при открытии
+    setTimeout(()=>{
+      notifs.forEach(n => n.read = true);
+      persist();
+      renderBell();
+    }, 800);
+  }
+}
+function clearAllNotifs(e){
+  e.stopPropagation();
+  notifs = [];
+  persist();
+  renderBell();
+}
+// Закрытие при клике вне
+document.addEventListener('click', (e) => {
+  const dd = document.getElementById('bell-dropdown');
+  if(dd && dd.classList.contains('on') && !e.target.closest('.bell-wrap')){
+    dd.classList.remove('on');
+  }
+});
 
 /* ================= РОУТЕР ================= */
 let cabFilter='all',admTab='queue',cabCurrentTab='rel';
@@ -820,7 +1364,7 @@ function renderNav(active){
 }
 function logout(){
   stopChatPolling();
-  session=null;persist();toast('Вы вышли из аккаунта');go('landing');
+  session=null;persist();toast('Вы вышли из аккаунта','ok','👋');go('landing');
 }
 
 /* ================= LANDING ================= */
@@ -869,38 +1413,8 @@ function bindReveals(){
   setTimeout(()=>{els.forEach(el=>{const r=el.getBoundingClientRect();if(r.top<window.innerHeight&&r.bottom>0)el.classList.add('in')})},400);
 }
 
-/* ================= ГЕНЕРАЦИЯ КОДА И ЛОГ ================= */
-function generateCode(){return String(Math.floor(100000 + Math.random() * 900000))}
-
-function logCode(email,code,type,name=''){
-  clog.push({
-    email,code,type,name,
-    createdAt:new Date().toISOString()
-  });
-  if(clog.length>200)clog=clog.slice(-200);
-  persist();
-}
-
-function buildCodeTxt(){
-  const header='=====================================================\n  ВОЛНА — лог кодов подтверждения\n  Сформирован: '+fmtDt(Date.now())+'\n  Всего записей: '+clog.length+'\n=====================================================\n\n';
-  if(!clog.length)return header+'(записей пока нет)\n';
-  const rows=clog.map((e,i)=>'['+String(i+1).padStart(3,'0')+']  '+fmtDt(new Date(e.createdAt).getTime())+
-    '\n        Тип:     '+(e.type==='reg'?'Регистрация':'Вход')+
-    '\n        Имя:     '+(e.name||'—')+
-    '\n        E-mail:  '+e.email+
-    '\n        Код:     '+e.code+'\n').join('\n');
-  return header+rows+'\n=====================================================\n';
-}
-function downloadCodeTxt(){
-  const blob=new Blob([buildCodeTxt()],{type:'text/plain;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='codes.txt';
-  document.body.appendChild(a);a.click();
-  setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},300);
-}
-
-/* ================= AUTH (БЕЗ ПАРОЛЯ, ЧЕРЕЗ КОД) ================= */
-let pendingVerify=null; /* {mode:'reg'|'login', name, email, code} */
+/* ================= AUTH ================= */
+let pendingVerify=null;
 
 function authTab(t){
   document.getElementById('tab-log').classList.toggle('on',t==='log');
@@ -912,44 +1426,130 @@ function authTab(t){
 const bad=(id,on)=>{const f=document.getElementById(id).closest('.field');f.classList.toggle('bad',on);return !on};
 const emailOk=v=>v.includes('@')&&v.split('@')[0].length>0&&v.split('@')[1].length>0;
 
-/* ЛОГИН: отправляем код */
-document.getElementById('f-login').addEventListener('submit',e=>{
+/* ЛОГИН через ВОЛНА.AI */
+document.getElementById('f-login').addEventListener('submit',async e=>{
   e.preventDefault();
   const em=document.getElementById('li-email').value.trim();
   let ok=bad('li-email',!emailOk(em));
   if(!ok){document.getElementById('acard').classList.add('shake');return;}
   const u=users.find(x=>x.email.toLowerCase()===em.toLowerCase());
-  if(!u){toast('Пользователь с таким e-mail не найден','err');document.getElementById('acard').classList.add('shake');return;}
+  if(!u){toast('Пользователь с таким e-mail не найден','err','⚠️');document.getElementById('acard').classList.add('shake');return;}
 
-  /* Генерируем код (для админа — мастер-код 000000 + рандомный) */
-  const code=(u.role==='admin')?ADMIN_MASTER_CODE:generateCode();
-  pendingVerify={mode:'login',email:em,code};
-  logCode(em,code,'login',u.name);
-
-  /* Симулируем отправку на почту — показываем код в тосте */
-  toast('📧 Код отправлен на '+em+' : '+code,'ok');
-  showCodeModal(em);
+  await runAIProcess(em, 'login', u.name);
 });
 
-/* РЕГИСТРАЦИЯ: имя + email */
-document.getElementById('f-reg').addEventListener('submit',e=>{
+/* РЕГИСТРАЦИЯ через ВОЛНА.AI */
+document.getElementById('f-reg').addEventListener('submit',async e=>{
   e.preventDefault();
   const nm=document.getElementById('rg-name').value.trim();
   const em=document.getElementById('rg-email').value.trim();
   let ok=bad('rg-name',nm.length<2);
   ok=bad('rg-email',!emailOk(em))&&ok;
-  if(users.some(x=>x.email.toLowerCase()===em.toLowerCase())){bad('rg-email',true);toast('Этот e-mail уже зарегистрирован','err');ok=false;}
+  if(users.some(x=>x.email.toLowerCase()===em.toLowerCase())){bad('rg-email',true);toast('Этот e-mail уже зарегистрирован','err','⚠️');ok=false;}
   if(!ok){document.getElementById('acard').classList.add('shake');return;}
 
-  const code=generateCode();
-  pendingVerify={mode:'reg',name:nm,email:em,code};
-  logCode(em,code,'reg',nm);
-
-  toast('📧 Код подтверждения: '+code+' (от admin@volna.ru)','ok');
-  showCodeModal(em);
+  await runAIProcess(em, 'reg', nm);
 });
 
-/* ================= МОДАЛКА КОДА ================= */
+/* ================= МОДАЛКА ВОЛНА.AI (ВИЗУАЛИЗАЦИЯ) ================= */
+async function runAIProcess(email, mode, name){
+  const stagesEl = document.getElementById('ai-stages');
+  const progressBar = document.getElementById('ai-progress-bar');
+  const analysisEl = document.getElementById('ai-analysis');
+  const statusEl = document.getElementById('ai-status');
+  
+  analysisEl.style.display = 'none';
+  statusEl.textContent = '';
+  
+  const stages = [
+    {ico:'🔍', name:'Анализ e-mail', detail:'проверка домена и паттернов...'},
+    {ico:'🛡️', name:'Проверка безопасности', detail:'сканирование угроз...'},
+    {ico:'🧬', name:'Генерация кода нейросетью', detail:'алгоритм VOLNA-NN...'},
+    {ico:'📧', name:'Отправка на почту', detail:`доставка на ${email}...`}
+  ];
+  
+  stagesEl.innerHTML = stages.map((s,i)=>`
+    <div class="ai-stage" id="ai-stage-${i}">
+      <div class="ai-stage-ico">${s.ico}</div>
+      <div class="ai-stage-txt">
+        <div class="ai-stage-name">${s.name}</div>
+        <div class="ai-stage-detail">${s.detail}</div>
+      </div>
+    </div>`).join('');
+  
+  document.getElementById('ai-modal').classList.add('on');
+  
+  // Этап 1
+  setStageActive(0);
+  progressBar.style.width = '10%';
+  await new Promise(r=>setTimeout(r,700));
+  setStageDone(0);
+  progressBar.style.width = '25%';
+  
+  // Этап 2
+  setStageActive(1);
+  await new Promise(r=>setTimeout(r,600));
+  setStageDone(1);
+  progressBar.style.width = '50%';
+  
+  // Запускаем реальный AI
+  const result = await VolnaAI.dispatch(email, mode, name);
+  
+  // Этап 3 (показ анализа)
+  setStageActive(2);
+  progressBar.style.width = '75%';
+  showAnalysis(result.analysis);
+  await new Promise(r=>setTimeout(r,900));
+  setStageDone(2);
+  progressBar.style.width = '90%';
+  
+  // Этап 4
+  setStageActive(3);
+  statusEl.innerHTML = `<span style="color:var(--mint)">✓ Email доставлен!</span>`;
+  await new Promise(r=>setTimeout(r,500));
+  setStageDone(3);
+  progressBar.style.width = '100%';
+  
+  toast('📧 Код '+result.code+' в вашей почте','ai','🧠');
+  VolnaAI.aiLog(`[ЗАВЕРШЕНО] Успешная рассылка для ${email}, код=${result.code}`, 'ok');
+  
+  await new Promise(r=>setTimeout(r,400));
+  document.getElementById('ai-modal').classList.remove('on');
+  
+  // Открываем модалку ввода кода
+  pendingVerify = {mode, email, code:result.code, name};
+  showCodeModal(email);
+}
+
+function setStageActive(i){
+  document.querySelectorAll('.ai-stage').forEach((s,idx)=>{
+    if(idx===i)s.classList.add('active');
+  });
+}
+function setStageDone(i){
+  const s = document.querySelectorAll('.ai-stage')[i];
+  s.classList.remove('active');
+  s.classList.add('done');
+  s.querySelector('.ai-stage-ico').textContent = '✓';
+}
+function showAnalysis(a){
+  const el = document.getElementById('ai-analysis');
+  const trustClass = a.score >= 75 ? 'trust-high' : a.score >= 40 ? 'trust-mid' : 'trust-low';
+  el.innerHTML = `
+    <div class="ai-analysis-row"><span class="lbl">Домен:</span><span class="val">${esc(a.domain||'—')}</span></div>
+    <div class="ai-analysis-row"><span class="lbl">Доверие домену:</span><span class="val">${a.metrics.domainScore}/40</span></div>
+    <div class="ai-analysis-row"><span class="lbl">Паттерн имени:</span><span class="val">${a.metrics.nameScore}/20</span></div>
+    <div class="ai-analysis-row"><span class="lbl">Активность:</span><span class="val">${a.metrics.activityScore}/25</span></div>
+    <div class="ai-analysis-row"><span class="lbl">История:</span><span class="val">${a.metrics.historyScore}/15</span></div>
+    <div class="ai-analysis-row"><span class="lbl">Итог:</span><span class="val"><span class="ai-class-badge ${a.userClass}">${classLabel(a.userClass)}</span> · ${a.score}/100</span></div>
+    <div class="trust-bar"><div class="trust-bar-fill ${trustClass}" style="width:${a.score}%"></div></div>`;
+  el.style.display = 'block';
+}
+function classLabel(c){
+  return {trusted:'доверенный',standard:'стандартный','new':'новый',suspicious:'подозрительный'}[c]||c;
+}
+
+/* ================= КОД МОДАЛКА ================= */
 function showCodeModal(email){
   document.getElementById('code-email-display').textContent=email;
   document.getElementById('code-input').value='';
@@ -962,15 +1562,20 @@ function closeCodeModal(){
   document.getElementById('code-modal').classList.remove('on');
   pendingVerify=null;
 }
-function resendCode(){
+async function resendCode(){
   if(!pendingVerify)return;
-  const newCode=generateCode();
-  pendingVerify.code=newCode;
-  logCode(pendingVerify.email,newCode,pendingVerify.mode,pendingVerify.name||'');
-  toast('📧 Новый код: '+newCode,'ok');
   document.getElementById('code-input').value='';
   document.getElementById('code-input').classList.remove('bad');
-  document.getElementById('code-error').textContent='';
+  document.getElementById('code-error').textContent='Отправляем новый код...';
+  document.getElementById('code-modal').classList.remove('on');
+  
+  // Повторно запускаем AI-процесс
+  await runAIProcess(pendingVerify.email, pendingVerify.mode, pendingVerify.name);
+}
+function openInboxFromCode(){
+  closeCodeModal();
+  go('cabinet');
+  setTimeout(()=>cabTab('inbox'),100);
 }
 
 function verifyCode(){
@@ -985,7 +1590,6 @@ function verifyCode(){
     return;
   }
 
-  /* Проверяем: либо текущий код, либо мастер-код админа */
   const ok=code===pendingVerify.code ||
     (pendingVerify.mode==='login' &&
      pendingVerify.email.toLowerCase()===ADMIN_EMAIL.toLowerCase() &&
@@ -994,50 +1598,55 @@ function verifyCode(){
   if(!ok){
     input.classList.add('bad');
     errEl.textContent='Неверный код';
+    VolnaAI.aiLog(`[ОШИБКА] Неверный код от ${pendingVerify.email}: ${code}`, 'err');
+    addNotification({type:'err',title:'Неверный код',msg:`Попытка входа с неверным кодом`,ts:Date.now()});
     setTimeout(()=>input.classList.remove('bad'),500);
     return;
   }
 
-  /* Успех */
+  VolnaAI.aiLog(`[ВХОД] Успешная верификация ${pendingVerify.email}`, 'ok');
+  addNotification({type:'ok',title:'Вход выполнен',msg:`Добро пожаловать в ВОЛНА!`,ts:Date.now()});
+
   if(pendingVerify.mode==='reg'){
     const u={id:uid(),name:pendingVerify.name,email:pendingVerify.email,role:'user',ts:Date.now()};
     users.push(u);
     session={userId:u.id};
     persist();
-    toast('Аккаунт создан. Добро пожаловать, '+u.name+'!','ok');
+    toast('Аккаунт создан. Добро пожаловать, '+u.name+'!','ok','🎉');
   }else{
     const u=users.find(x=>x.email.toLowerCase()===pendingVerify.email.toLowerCase());
     session={userId:u.id};
     persist();
-    toast('С возвращением, '+u.name+'!','ok');
+    toast('С возвращением, '+u.name+'!','ok','👋');
   }
   const targetUser=users.find(x=>x.id===session.userId);
   closeCodeModal();
   go(targetUser.role==='admin'?'admin':'cabinet');
 }
 
-/* Enter в поле кода = подтвердить */
 document.getElementById('code-input').addEventListener('keydown',e=>{
   if(e.key==='Enter'){e.preventDefault();verifyCode();}
 });
-/* Только цифры */
 document.getElementById('code-input').addEventListener('input',function(){
   this.value=this.value.replace(/\D/g,'').slice(0,6);
   document.getElementById('code-error').textContent='';
   this.classList.remove('bad');
 });
 
-/* ================= КАБИНЕТ + ЧАТ ================= */
+/* ================= КАБИНЕТ + ЧАТ + ПОЧТА ================= */
 const STATUS={moderation:'На модерации',approved:'Одобрен',rejected:'Отклонён'};
 
 function cabTab(tab){
   cabCurrentTab=tab;
   document.getElementById('cabtab-rel').classList.toggle('on',tab==='rel');
+  document.getElementById('cabtab-inbox').classList.toggle('on',tab==='inbox');
   document.getElementById('cabtab-chat').classList.toggle('on',tab==='chat');
   document.getElementById('cab-rel-section').style.display=tab==='rel'?'block':'none';
+  document.getElementById('cab-inbox-section').style.display=tab==='inbox'?'block':'none';
   document.getElementById('cab-chat-section').style.display=tab==='chat'?'flex':'none';
   if(tab==='chat'){renderChat();startChatPolling();setTimeout(scrollChatBottom,50);}
   else stopChatPolling();
+  if(tab==='inbox')renderMyInbox();
 }
 
 function renderCab(){
@@ -1045,6 +1654,12 @@ function renderCab(){
   document.getElementById('cab-name').textContent=u.name;
   document.getElementById('cab-email').textContent=u.email+' · на платформе с '+fmt(u.ts);
   document.getElementById('chat-cnt').textContent=chat.length;
+  
+  // Счётчик писем в моей почте
+  const myEmail = u.email.toLowerCase();
+  const myMails = inbox.filter(m => m.to.toLowerCase() === myEmail);
+  document.getElementById('inbox-cnt').textContent = myMails.length;
+  
   const mine=releases.filter(r=>r.userId===u.id);
   const c=k=>mine.filter(r=>r.status===k).length;
   document.getElementById('cab-chips').innerHTML=`
@@ -1077,10 +1692,46 @@ function renderCab(){
   :`<div class="empty"><div class="big">🎛️</div><b>Здесь пока пусто</b><p style="margin:10px 0 20px">${cabFilter==='all'?'Самое время выпустить первый релиз.':'По этому фильтру релизов нет.'}</p>
      <button class="btn" onclick="go('newrel')">Создать релиз</button></div>`;
   if(cabCurrentTab==='chat')renderChat();
+  if(cabCurrentTab==='inbox')renderMyInbox();
 }
 function delRel(id){
   if(!confirm('Удалить релиз безвозвратно?'))return;
-  releases=releases.filter(r=>r.id!==id);persist();toast('Релиз удалён');renderCab();
+  releases=releases.filter(r=>r.id!==id);persist();toast('Релиз удалён','ok','🗑');renderCab();
+}
+
+/* ====== МОЯ ПОЧТА (виртуальный inbox) ====== */
+function renderMyInbox(){
+  const u = me(); if(!u) return;
+  const myEmail = u.email.toLowerCase();
+  const myMails = inbox.filter(m => m.to.toLowerCase() === myEmail).sort((a,b)=>b.ts-a.ts);
+  
+  document.getElementById('my-inbox-email').textContent = u.email;
+  const listEl = document.getElementById('my-inbox-list');
+  
+  if(!myMails.length){
+    listEl.innerHTML = `<div class="empty"><div class="big">📭</div><b>Почтовый ящик пуст</b><p style="margin:10px 0 20px">Здесь будут появляться все письма с кодами от admin@volna.ru</p></div>`;
+    return;
+  }
+  
+  listEl.innerHTML = `<div class="inbox-view">${myMails.map(m => `
+    <div class="inbox-email">
+      <div class="inbox-from">
+        <div class="inbox-avatar">🎧</div>
+        <div class="inbox-from-info">
+          <div class="inbox-from-name">${esc(m.fromName)} <span class="ai-class-badge ${m.class||'standard'}">${classLabel(m.class||'standard')}</span></div>
+          <div class="inbox-from-email">${esc(m.from)}</div>
+        </div>
+        <div class="inbox-time">${fmtDt(m.ts)}</div>
+      </div>
+      <div class="inbox-subject">📌 ${esc(m.subject)}</div>
+      <div class="inbox-body">${esc(m.body).replace(/\n/g,'<br>')}</div>
+      <div class="inbox-code-box">
+        <div class="inbox-code-label">Ваш код подтверждения</div>
+        <div class="inbox-code" onclick="copyCode(event,'${esc(m.code)}')" title="Нажмите, чтобы скопировать">${esc(m.code)}</div>
+      </div>
+      <div class="inbox-footer">${esc(m.footer).replace(/\n/g,'<br>')}</div>
+    </div>
+  `).join('')}</div>`;
 }
 
 /* ================= ЧАТ ================= */
@@ -1187,12 +1838,12 @@ function addTrack(){
   row.querySelector('input[type="text"]').addEventListener('input',updPreview);
   row.querySelector('input[type="file"]').addEventListener('change',function(){
     const file=this.files[0];if(!file)return;
-    if(!file.name.toLowerCase().endsWith('.wav')&&file.type!=='audio/wav'&&file.type!=='audio/x-wav'){toast('Допускается только формат .WAV','err');this.value='';return;}
-    if(file.size>25*1024*1024){toast('WAV-файл не должен превышать 25 МБ','err');this.value='';return;}
+    if(!file.name.toLowerCase().endsWith('.wav')&&file.type!=='audio/wav'&&file.type!=='audio/x-wav'){toast('Допускается только формат .WAV','err','⚠️');this.value='';return;}
+    if(file.size>25*1024*1024){toast('WAV-файл не должен превышать 25 МБ','err','⚠️');this.value='';return;}
     const curIdx=parseInt(row.dataset.idx),reader=new FileReader();
     reader.onload=e=>{trackAudios[curIdx]={name:file.name.replace(/\.wav$/i,''),data:e.target.result};
       const btn=row.querySelector('.wav-btn');btn.classList.add('loaded');btn.textContent='✓ WAV';};
-    reader.onerror=()=>toast('Ошибка чтения файла','err');
+    reader.onerror=()=>toast('Ошибка чтения файла','err','⚠️');
     reader.readAsDataURL(file);
   });
   box.appendChild(row);updPreview();
@@ -1200,12 +1851,12 @@ function addTrack(){
 
 document.getElementById('r-cover').addEventListener('change',function(){
   const file=this.files[0];if(!file)return;
-  if(!file.name.toLowerCase().endsWith('.png')&&file.type!=='image/png'){toast('Обложка должна быть в формате PNG','err');this.value='';return;}
-  if(file.size>30*1024*1024){toast('Файл слишком большой (макс. 30 МБ)','err');this.value='';return;}
+  if(!file.name.toLowerCase().endsWith('.png')&&file.type!=='image/png'){toast('Обложка должна быть в формате PNG','err','⚠️');this.value='';return;}
+  if(file.size>30*1024*1024){toast('Файл слишком большой (макс. 30 МБ)','err','⚠️');this.value='';return;}
   const img=new Image(),url=URL.createObjectURL(file);
   img.onload=()=>{
     if(img.width!==3000||img.height!==3000){
-      toast('Размер обложки должен быть строго 3000×3000 px (сейчас: '+img.width+'×'+img.height+')','err');
+      toast('Размер обложки должен быть строго 3000×3000 px (сейчас: '+img.width+'×'+img.height+')','err','⚠️');
       URL.revokeObjectURL(url);this.value='';return;
     }
     const c=document.createElement('canvas');c.width=1200;c.height=1200;
@@ -1215,7 +1866,7 @@ document.getElementById('r-cover').addEventListener('change',function(){
     document.getElementById('drop').innerHTML=`<img src="${formCover}" alt=""><div class="drop-info">✓ Обложка загружена. Нажми, чтобы заменить.</div>`;
     updPreview();
   };
-  img.onerror=()=>{toast('Ошибка загрузки изображения','err');URL.revokeObjectURL(url);this.value='';};
+  img.onerror=()=>{toast('Ошибка загрузки изображения','err','⚠️');URL.revokeObjectURL(url);this.value='';};
   img.src=url;
 });
 
@@ -1271,30 +1922,31 @@ document.getElementById('f-rel').addEventListener('submit',e=>{
   ok=bad('r-genre',!t('r-genre'))&&ok;
   const date=document.getElementById('r-date').value;
   ok=bad('r-date',!date||date<=new Date().toISOString().slice(0,10))&&ok;
-  if(type!=='Сингл'&&tracks.length<2){toast('Для '+(type==='EP'?'EP':'альбома')+' укажите минимум 2 трека','err');ok=false;}
-  if(type==='Сингл'&&tracks.length<1){toast('Добавьте хотя бы один трек','err');ok=false;}
-  if(!formCover){toast('Загрузите обложку (PNG 3000×3000)','err');ok=false;}
+  if(type!=='Сингл'&&tracks.length<2){toast('Для '+(type==='EP'?'EP':'альбома')+' укажите минимум 2 трека','err','⚠️');ok=false;}
+  if(type==='Сингл'&&tracks.length<1){toast('Добавьте хотя бы один трек','err','⚠️');ok=false;}
+  if(!formCover){toast('Загрузите обложку (PNG 3000×3000)','err','⚠️');ok=false;}
   const trackDataArr=[];
   document.querySelectorAll('#tracks .trk').forEach((row,i)=>{
     const idx=parseInt(row.dataset.idx);
     trackDataArr.push({name:row.querySelector('input[type="text"]').value.trim()||'Трек '+(i+1),data:trackAudios[idx]?trackAudios[idx].data:null});
   });
-  if(!trackDataArr.some(x=>x.data)){toast('Загрузите хотя бы один аудиофайл .WAV','err');ok=false;}
+  if(!trackDataArr.some(x=>x.data)){toast('Загрузите хотя бы один аудиофайл .WAV','err','⚠️');ok=false;}
   const rw=document.getElementById('r-rights');
   rw.querySelector('.ferr').style.display=rw.checked?'none':'block';
   if(!rw.checked)ok=false;
-  if(!ok){toast('Проверьте выделенные поля','err');return;}
+  if(!ok){toast('Проверьте выделенные поля','err','⚠️');return;}
   const rel={id:uid(),num:'VLM-'+String(seq++).padStart(4,'0'),userId:u.id,title:t('r-title'),artist:t('r-artist'),
     type,genre:t('r-genre'),date,label:t('r-label'),explicit:document.getElementById('r-explicit').checked,
     tracks,trackData:trackDataArr,desc:t('r-desc'),cover:formCover,status:'moderation',mod:'',ts:Date.now()};
   releases.unshift(rel);
   formCover='';trackAudios={};
   persist();showPreview(rel);
-  toast('Релиз «'+rel.title+'» отправлен на модерацию 🎉','ok');
+  toast('Релиз «'+rel.title+'» отправлен на модерацию 🎉','ok','🚀');
+  addNotification({type:'ok',title:'Новый релиз создан',msg:`«${rel.title}» ожидает модерации`,ts:Date.now()});
   cabFilter='all';
 });
 
-/* ================= АДМИН ================= */
+/* ================= АДМИН-ПАНЕЛЬ ================= */
 function renderAdmin(){
   const q=releases.filter(r=>r.status==='moderation');
   const c=k=>releases.filter(r=>r.status===k).length;
@@ -1303,7 +1955,7 @@ function renderAdmin(){
     <div class="chip c2"><b>${c('approved')}</b><span>Одобренные</span></div>
     <div class="chip c4"><b>${c('rejected')}</b><span>Отклонённые</span></div>
     <div class="chip c1"><b>${users.filter(u=>u.role!=='admin').length}</b><span>Артистов</span></div>`;
-  const T=[['queue','Очередь модерации',q.length],['all','Все релизы',releases.length],['users','Пользователи',users.length],['codes','Коды подтверждений',clog.length]];
+  const T=[['queue','Очередь модерации',q.length],['ai','🧠 ВОЛНА.AI',aiLog.length],['all','Все релизы',releases.length],['users','Пользователи',users.length],['codes','Коды',clog.length]];
   document.getElementById('adm-tabs').innerHTML=T.map(([k,l,n])=>
     `<button class="${admTab===k?'on':''}" onclick="admTab='${k}';renderAdmin()">${l}<span class="cnt">${n}</span></button>`).join('');
   const body=document.getElementById('adm-body');
@@ -1340,6 +1992,52 @@ function renderAdmin(){
       </div>`).join('')+'</div>'
     :`<div class="empty"><div class="big">🎧</div><b>Очередь пуста</b><p style="margin-top:8px">Все релизы обработаны. Отличная работа!</p></div>`;
   }
+  else if(admTab==='ai'){
+    // Статистика ВОЛНА.AI
+    const classes = {trusted:0,standard:0,'new':0,suspicious:0};
+    clog.forEach(c => { if(classes[c.class]!==undefined) classes[c.class]++; });
+    const recentLog = aiLog.slice(0,30);
+    
+    body.innerHTML = `
+      <div class="ai-panel">
+        <div class="ai-panel-head">
+          <div class="ai-panel-ico">🧠</div>
+          <div class="ai-panel-title">
+            <h3>ВОЛНА.AI <span class="ver">v2.4</span></h3>
+            <div class="sub">Нейросеть анализа и рассылки кодов подтверждения</div>
+          </div>
+        </div>
+        
+        <div class="ai-stats">
+          <div class="ai-stat s1"><div class="lbl">Всего кодов</div><div class="val">${clog.length}</div></div>
+          <div class="ai-stat s2"><div class="lbl">Средний балл</div><div class="val">${clog.length?Math.round(clog.reduce((s,c)=>s+(c.score||0),0)/clog.length):0}</div></div>
+          <div class="ai-stat s3"><div class="lbl">Уникальных email</div><div class="val">${new Set(clog.map(c=>c.email)).size}</div></div>
+          <div class="ai-stat s4"><div class="lbl">Подозрительных</div><div class="val">${classes.suspicious}</div></div>
+        </div>
+        
+        <div class="ai-classes">
+          <div class="ai-class-card trusted"><div class="emoji">✅</div><div class="name">Доверенные</div><div class="cnt">${classes.trusted}</div></div>
+          <div class="ai-class-card standard"><div class="emoji">👤</div><div class="name">Стандартные</div><div class="cnt">${classes.standard}</div></div>
+          <div class="ai-class-card new"><div class="emoji">🆕</div><div class="name">Новые</div><div class="cnt">${classes['new']}</div></div>
+          <div class="ai-class-card suspicious"><div class="emoji">⚠️</div><div class="name">Подозрительные</div><div class="cnt">${classes.suspicious}</div></div>
+        </div>
+        
+        <div class="ai-log">
+          <div style="font-size:11px;color:var(--mut);margin-bottom:8px;letter-spacing:.1em;text-transform:uppercase">📋 Журнал работы нейросети (последние 30 событий)</div>
+          ${recentLog.length?recentLog.map(l=>`
+            <div class="ai-log-line">
+              <span class="ts">${fmtTime(l.ts)}</span>
+              <span class="lvl ${l.lvl}">[${l.lvl.toUpperCase()}]</span>
+              <span class="msg">${esc(l.msg)}</span>
+            </div>`).join(''):'<div style="color:var(--mut);padding:10px">Нет записей</div>'}
+        </div>
+        
+        <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+          <button class="btn ghost sm" onclick="clearAILog()">🗑 Очистить журнал</button>
+          <button class="btn sky sm" onclick="exportAILog()">⬇ Скачать ai-log.txt</button>
+        </div>
+      </div>`;
+  }
   else if(admTab==='all'){
     body.innerHTML='<div class="mlist">'+(releases.length?releases.map(r=>`
       <div class="mrow">
@@ -1362,18 +2060,20 @@ function renderAdmin(){
   else if(admTab==='codes'){
     body.innerHTML=`
       <div class="auth-hint" style="margin:0 0 20px;width:100%">
-        Все отправленные коды. Мастер-код админа <code>admin@volna.ru</code>: <b>${ADMIN_MASTER_CODE}</b>.
+        Все сгенерированные коды с классификацией ВОЛНА.AI. Мастер-код админа <code>admin@volna.ru</code>: <b>${ADMIN_MASTER_CODE}</b>.
       </div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
         <button class="btn" onclick="downloadCodeTxt()">⬇ Скачать codes.txt</button>
         <button class="btn ghost" onclick="clearCodes()">🗑 Очистить лог</button>
       </div>
       ${clog.length?
-        `<table class="utab"><tr><th>#</th><th>Дата</th><th>Тип</th><th>Имя</th><th>E-mail</th><th>Код</th></tr>
+        `<table class="utab"><tr><th>#</th><th>Дата</th><th>Тип</th><th>Класс AI</th><th>Балл</th><th>Имя</th><th>E-mail</th><th>Код</th></tr>
           ${clog.slice().reverse().map((e,i)=>`<tr>
             <td>${clog.length-i}</td>
             <td>${fmtDt(new Date(e.createdAt).getTime())}</td>
             <td><span class="type-chip ${e.type}">${e.type==='reg'?'Регистрация':'Вход'}</span></td>
+            <td><span class="ai-class-badge ${e.class||'standard'}">${classLabel(e.class||'standard')}</span></td>
+            <td><b style="color:${(e.score||0)>=75?'var(--mint)':(e.score||0)>=40?'var(--amber)':'var(--coral)'}">${e.score||'—'}</b></td>
             <td><b>${esc(e.name||'—')}</b></td>
             <td>${esc(e.email)}</td>
             <td class="code-cell">${esc(e.code)}</td>
@@ -1386,27 +2086,60 @@ function modAct(id,status){
   const r=releases.find(x=>x.id===id);if(!r)return;
   if(status==='rejected'){
     const v=document.getElementById('rc-'+id).value.trim();
-    if(!v){toast('Укажите причину отклонения','err');document.getElementById('rc-'+id).focus();return;}
+    if(!v){toast('Укажите причину отклонения','err','⚠️');document.getElementById('rc-'+id).focus();return;}
     r.mod=v;
   }
   r.status=status;r.decided=Date.now();persist();
-  toast(status==='approved'?`Релиз «${r.title}» одобрен ✓ — перемещён в «Одобренные»`:`Релиз «${r.title}» отклонён — перемещён в «Отклонённые»`,status==='approved'?'ok':'err');
+  toast(status==='approved'?`Релиз «${r.title}» одобрен ✓`:`Релиз «${r.title}» отклонён`,status==='approved'?'ok':'err',status==='approved'?'✓':'✕');
   renderAdmin();
 }
 function clearCodes(){
   if(!confirm('Удалить все записи лога кодов?'))return;
-  clog=[];persist();toast('Лог очищен');renderAdmin();
+  clog=[];persist();toast('Лог кодов очищен','ok','🗑');renderAdmin();
+}
+function clearAILog(){
+  if(!confirm('Очистить журнал работы ВОЛНА.AI?'))return;
+  aiLog=[];persist();toast('Журнал AI очищен','ok','🗑');renderAdmin();
+}
+function exportAILog(){
+  const content = aiLog.map(l=>`[${fmtDt(l.ts)}] [${l.lvl.toUpperCase()}] ${l.msg}`).join('\n');
+  const blob = new Blob([content],{type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');a.href=url;a.download='ai-log.txt';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},300);
+}
+function downloadCodeTxt(){
+  const header='=====================================================\n  ВОЛНА — лог кодов подтверждения (ВОЛНА.AI)\n  Сформирован: '+fmtDt(Date.now())+'\n  Всего записей: '+clog.length+'\n=====================================================\n\n';
+  if(!clog.length){toast('Лог пуст','err','⚠️');return;}
+  const rows=clog.map((e,i)=>'['+String(i+1).padStart(3,'0')+']  '+fmtDt(new Date(e.createdAt).getTime())+
+    '\n        Тип:     '+(e.type==='reg'?'Регистрация':'Вход')+
+    '\n        Класс:   '+classLabel(e.class||'standard')+' ('+(e.class||'standard')+')'+
+    '\n        Балл:    '+(e.score||'—')+'/100'+
+    '\n        Имя:     '+(e.name||'—')+
+    '\n        E-mail:  '+e.email+
+    '\n        Код:     '+e.code+'\n').join('\n');
+  const blob=new Blob([header+rows+'\n=====================================================\n'],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='codes.txt';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},300);
 }
 
 /* ================= СТАРТ ================= */
 if(session&&!me()){session=null;persist();}
 initChatInput();
+renderBell();
 go(!session?'landing':(me()?(me().role==='admin'?'admin':'cabinet'):'landing'));
 
 window.addEventListener('storage',e=>{
   if(e.key==='vln_chat'){
     chat=LS.get('vln_chat',[]);
     if(cabCurrentTab==='chat'&&document.getElementById('v-cabinet').classList.contains('on'))renderChat();
+  }
+  if(e.key==='vln_notifs'){
+    notifs=LS.get('vln_notifs',[]);
+    renderBell();
   }
 });
 </script>
