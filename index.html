@@ -1611,45 +1611,111 @@ function closePreview(){
 document.getElementById('preview-modal').addEventListener('click',function(e){if(e.target===this)closePreview()});
 
 /* ================= ОТПРАВКА РЕЛИЗА + ДОСТАВКА НА ПЛОЩАДКИ ================= */
-document.getElementById('f-rel').addEventListener('submit',e=>{
-  e.preventDefault();const u=me();if(!u)return;
-  const type=document.querySelector('input[name=rtype]:checked').value;
-  const t=v=>document.getElementById(v).value.trim();
-  const tracks=[...document.querySelectorAll('#tracks input[type="text"]')].map(i=>i.value.trim()).filter(Boolean);
-  let ok=bad('r-title',!t('r-title'));
-  ok=bad('r-artist',!t('r-artist'))&&ok;
-  ok=bad('r-genre',!t('r-genre'))&&ok;
-  const date=document.getElementById('r-date').value;
-  ok=bad('r-date',!date||date<=new Date().toISOString().slice(0,10))&&ok;
-  if(type!=='Сингл'&&tracks.length<2){toast('Для '+(type==='EP'?'EP':'альбома')+' укажите минимум 2 трека','err','⚠️');ok=false;}
-  if(type==='Сингл'&&tracks.length<1){toast('Добавьте хотя бы один трек','err','⚠️');ok=false;}
-  if(!formCover){toast('Загрузите обложку (PNG 3000×3000)','err','⚠️');ok=false;}
-  const trackDataArr=[];
-  document.querySelectorAll('#tracks .trk').forEach((row,i)=>{
-    const idx=parseInt(row.dataset.idx);
-    trackDataArr.push({name:row.querySelector('input[type="text"]').value.trim()||'Трек '+(i+1),data:trackAudios[idx]?trackAudios[idx].data:null});
+document.getElementById('f-rel').addEventListener('submit', e => {
+  e.preventDefault();
+  const u = me();
+  if (!u) { toast('Необходимо войти в аккаунт', 'err', '⚠️'); return; }
+
+  const type = document.querySelector('input[name=rtype]:checked').value;
+  const t = v => document.getElementById(v).value.trim();
+  const tracks = [...document.querySelectorAll('#tracks input[type="text"]')]
+    .map(i => i.value.trim()).filter(Boolean);
+
+  // === ВАЛИДАЦИЯ ===
+  let hasError = false;
+
+  if (!t('r-title'))   { bad('r-title', true);   hasError = true; } else { bad('r-title', false); }
+  if (!t('r-artist'))  { bad('r-artist', true);  hasError = true; } else { bad('r-artist', false); }
+  if (!t('r-genre'))   { bad('r-genre', true);   hasError = true; } else { bad('r-genre', false); }
+
+  const date = document.getElementById('r-date').value;
+  if (!date || date <= new Date().toISOString().slice(0, 10)) {
+    bad('r-date', true); hasError = true;
+  } else { bad('r-date', false); }
+
+  if (type !== 'Сингл' && tracks.length < 2) {
+    toast('Для ' + (type === 'EP' ? 'EP' : 'альбома') + ' укажите минимум 2 трека', 'err', '⚠️');
+    hasError = true;
+  }
+  if (type === 'Сингл' && tracks.length < 1) {
+    toast('Добавьте хотя бы один трек', 'err', '⚠️');
+    hasError = true;
+  }
+  if (!formCover) {
+    toast('Загрузите обложку (PNG 3000×3000)', 'err', '⚠️');
+    hasError = true;
+  }
+
+  // Проверка аудиофайлов
+  const trackDataArr = [];
+  document.querySelectorAll('#tracks .trk').forEach((row, i) => {
+    const idx = parseInt(row.dataset.idx);
+    trackDataArr.push({
+      name: row.querySelector('input[type="text"]').value.trim() || 'Трек ' + (i + 1),
+      data: trackAudios[idx] ? trackAudios[idx].data : null
+    });
   });
-  if(!trackDataArr.some(x=>x.data)){toast('Загрузите хотя бы один аудиофайл .WAV','err','⚠️');ok=false;}
-  const rw=document.getElementById('r-rights');
-  rw.querySelector('.ferr').style.display=rw.checked?'none':'block';
-  if(!rw.checked)ok=false;
-  if(!ok){toast('Проверьте выделенные поля','err','⚠️');return;}
-  
-  const connPlats=platforms.filter(p=>p.connected);
-  const rel={
-    id:uid(),num:'VLM-'+String(seq++).padStart(4,'0'),userId:u.id,
-    title:t('r-title'),artist:t('r-artist'),type,genre:t('r-genre'),
-    date,label:t('r-label'),explicit:document.getElementById('r-explicit').checked,
-    tracks,trackData:trackDataArr,desc:t('r-desc'),cover:formCover,
-    status:'moderation',mod:'',ts:Date.now(),
-    delivery:connPlats.map(p=>p.id) // запланированные площадки
+  if (!trackDataArr.some(x => x.data)) {
+    toast('Загрузите хотя бы один аудиофайл .WAV', 'err', '⚠️');
+    hasError = true;
+  }
+
+  // Проверка чекбокса прав
+  const rw = document.getElementById('r-rights');
+  const ferrEl = rw.querySelector('.ferr');
+  if (!rw.checked) {
+    if (ferrEl) ferrEl.style.display = 'block';
+    toast('Подтвердите права на материалы (галочка внизу формы)', 'err', '⚠️');
+    hasError = true;
+  } else {
+    if (ferrEl) ferrEl.style.display = 'none';
+  }
+
+  if (hasError) {
+    toast('Исправьте ошибки выше и попробуйте снова', 'err', '❌');
+    // Прокрутка к первой ошибке
+    const firstBad = document.querySelector('#f-rel .field.bad');
+    if (firstBad) firstBad.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  // === СОЗДАНИЕ РЕЛИЗА ===
+  const connPlats = platforms.filter(p => p.connected);
+  const rel = {
+    id: uid(),
+    num: 'VLM-' + String(seq++).padStart(4, '0'),
+    userId: u.id,
+    title: t('r-title'),
+    artist: t('r-artist'),
+    type,
+    genre: t('r-genre'),
+    date,
+    label: t('r-label'),
+    explicit: document.getElementById('r-explicit').checked,
+    tracks,
+    trackData: trackDataArr,
+    desc: t('r-desc'),
+    cover: formCover,
+    status: 'moderation',
+    mod: '',
+    ts: Date.now(),
+    delivery: connPlats.map(p => p.id)
   };
+
   releases.unshift(rel);
-  formCover='';trackAudios={};
-  persist();showPreview(rel);
-  toast('Релиз «'+rel.title+'» отправлен на модерацию 🎉','ok','🚀');
-  addNotification({type:'ok',title:'Новый релиз создан',msg:`«${rel.title}» ожидает модерации. Будет доставлен на ${connPlats.length} площадок.`,ts:Date.now()});
-  cabFilter='all';
+  formCover = '';
+  trackAudios = {};
+  persist();
+
+  showPreview(rel);
+  toast('Релиз «' + rel.title + '» отправлен на модерацию 🎉', 'ok', '🚀');
+  addNotification({
+    type: 'ok',
+    title: 'Новый релиз создан',
+    msg: '«' + rel.title + '» ожидает модерации. Будет доставлен на ' + connPlats.length + ' площадок.',
+    ts: Date.now()
+  });
+  cabFilter = 'all';
 });
 
 /* ================= АДМИН-ПАНЕЛЬ ================= */
